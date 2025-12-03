@@ -5,7 +5,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
-class HaColorSensor(hardwareMap: HardwareMap, name: String) {
+class HaColorSensor(name: String, hardwareMap: HardwareMap) {
     val colorSensor: RevColorSensorV3 = hardwareMap.get(RevColorSensorV3::class.java, name)
 
     init {

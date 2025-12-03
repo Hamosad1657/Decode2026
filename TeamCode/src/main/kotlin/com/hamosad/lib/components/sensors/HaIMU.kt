@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
 
-class HaIMU(hardwareMap: HardwareMap, name: String) {
+class HaIMU(name: String, hardwareMap: HardwareMap) {
     private val imu: IMU = hardwareMap.get(IMU::class.java, name)
 
     init {
