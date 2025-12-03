@@ -17,6 +17,7 @@ enum class DCMotorStopMode {
 
 enum class MotorType(val ticksPerRotation: Double) {
     GO_BUILDA5202(537.7),
+    REV_THROUGH_BORE_ENCODER(8192.0),
 }
 
 
