@@ -30,6 +30,12 @@ class HaMotor(name: String, hardwareMap: HardwareMap, val type: MotorType) {
         motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
 
+    var direction: DcMotorSimple.Direction
+        get() = motor.direction
+        set(value) {
+            motor.direction = value
+        }
+
     val currentVelocity: AngularVelocity get() = AngularVelocity.fromRPS(motor.velocity / type.ticksPerRotation)
     val currentPosition: Rotation2d get() = Rotation2d.fromRotations(motor.currentPosition / type.ticksPerRotation)
 
@@ -40,10 +46,6 @@ class HaMotor(name: String, hardwareMap: HardwareMap, val type: MotorType) {
 
     fun stopMotor() {
         motor.power = 0.0
-    }
-
-    fun setDirection(direction: DcMotorSimple.Direction) {
-        motor.direction = direction
     }
 
     fun resetEncoder() {
