@@ -1,5 +1,6 @@
 package com.hamosad.lib.components.motors
 
+import com.hamosad.lib.math.Amps
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.PIDController
 import com.hamosad.lib.math.Rotation2d
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 
 enum class DCMotorStopMode {
     COAST,
@@ -30,20 +32,27 @@ class HaMotor(name: String, hardwareMap: HardwareMap, val type: MotorType) {
         motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
     }
 
+    var direction: DcMotorSimple.Direction
+        get() = motor.direction
+        set(value) {
+            motor.direction = value
+        }
+
     val currentVelocity: AngularVelocity get() = AngularVelocity.fromRPS(motor.velocity / type.ticksPerRotation)
     val currentPosition: Rotation2d get() = Rotation2d.fromRotations(motor.currentPosition / type.ticksPerRotation)
+    val motorCurrent: Amps get() = motor.getCurrent(CurrentUnit.AMPS)
 
     // Basic motor control
     fun setVoltage(voltage: Volts) {
         motor.power = voltage / 12.0
     }
 
-    fun stopMotor() {
-        motor.power = 0.0
+    fun isCurrentOver(current: Amps): Boolean {
+        return current < motorCurrent
     }
 
-    fun setDirection(direction: DcMotorSimple.Direction) {
-        motor.direction = direction
+    fun stopMotor() {
+        motor.power = 0.0
     }
 
     fun resetEncoder() {

@@ -43,12 +43,12 @@ object MecanumSubsystem: Subsystem() {
             HaMotor("FR", hardwareMap!!, MotorType.GO_BUILDA5202),
             HaMotor("BL", hardwareMap!!, MotorType.GO_BUILDA5202),
         )
-        motors[0].setDirection(DcMotorSimple.Direction.REVERSE)
-        motors[1].setDirection(DcMotorSimple.Direction.FORWARD)
-        motors[2].setDirection(DcMotorSimple.Direction.FORWARD)
-        motors[3].setDirection(DcMotorSimple.Direction.REVERSE)
+        motors[0].direction = DcMotorSimple.Direction.REVERSE
+        motors[1].direction = DcMotorSimple.Direction.FORWARD
+        motors[2].direction = DcMotorSimple.Direction.FORWARD
+        motors[3].direction = DcMotorSimple.Direction.REVERSE
 
-        imu = HaIMU(hardwareMap!!, "IMU")
+        imu = HaIMU("IMU", hardwareMap!!)
 
         if (USE_VISION) {
             aprilTagCamera = HaAprilTagCamera(
