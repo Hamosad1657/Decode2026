@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.shooter
 
+import com.hamosad.lib.math.Amps
 import com.hamosad.lib.math.PIDGains
 import com.hamosad.lib.math.Rotation2d
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -26,9 +27,11 @@ object ShooterConstants {
     const val HOOD_ANGLE_TRANSMISSION_RATIO: Double = 0.0
     val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
     val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
-    val SERVO_DIRECTION = Servo.Direction.FORWARD
+    val SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
 
     val MAX_HOOD_ANGLE: Rotation2d = Rotation2d.fromDegrees(0.0)
     val MIN_HOOD_ANGLE: Rotation2d = Rotation2d.fromDegrees(0.0)
+
+    const val CURRENT_THRESHOLD: Amps = 0.0
 
 }
