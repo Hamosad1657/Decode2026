@@ -9,6 +9,7 @@ import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.PIDController
 import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
@@ -53,6 +54,11 @@ object ShooterSubsystem: Subsystem() {
         if (desiredAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
             servo?.setVoltage(hoodAnglePIDController.calculate(currentHoodAngle.asDegrees, desiredAngle.asDegrees))
         }
+    }
+
+    fun setWheelMotorsVoltage(voltage: Volts) {
+        rightMotor?.setVoltage(voltage)
+        leftMotor?.setVoltage(voltage)
     }
 
     override fun periodic() {
