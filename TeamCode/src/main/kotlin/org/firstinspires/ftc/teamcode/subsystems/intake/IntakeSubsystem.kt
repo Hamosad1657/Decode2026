@@ -18,6 +18,8 @@ object IntakeSubsystem: Subsystem() {
         motor?.setDirection(Constants.DIRECTION)
         motor?.stopMotor()
     }
+    
+    val isCurrentOverThreshold get() = motor?.isCurrentOver(Constants.THRESHOLD)
 
     private fun setVoltage(voltage: Volts) {
         motor?.setVoltage(voltage)
