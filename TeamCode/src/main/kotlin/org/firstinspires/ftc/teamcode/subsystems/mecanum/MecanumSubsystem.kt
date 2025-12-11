@@ -8,16 +8,21 @@ import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.PIDController
+import com.hamosad.lib.math.Pose2d
 import com.hamosad.lib.math.Rotation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.Translation2d
 import com.hamosad.lib.math.Translation3d
 import com.hamosad.lib.vision.AprilTagsStdDevs
 import com.hamosad.lib.vision.HaAprilTagCamera
+import com.hamosad.lib.vision.HaColorCamera
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor
+import org.firstinspires.ftc.vision.opencv.ColorRange
+import org.firstinspires.ftc.vision.opencv.ColorSpace
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumKinematics as Kinematics
 
@@ -32,8 +37,8 @@ object MecanumSubsystem: Subsystem() {
     )
     private var imu: HaIMU? = null
 
-    var USE_VISION = false
-    var aprilTagCamera: HaAprilTagCamera? = null
+    var USE_VISION = true
+    var blobCamera: HaAprilTagCamera? = null
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -51,25 +56,30 @@ object MecanumSubsystem: Subsystem() {
         imu = HaIMU("IMU", hardwareMap!!)
 
         if (USE_VISION) {
-            aprilTagCamera = HaAprilTagCamera(
+            blobCamera = HaAprilTagCamera(
                 hardwareMap!!,
-                "camera",
-                Length.fromMeters(5.0),
-                7.0,
-                Translation3d(0.0, 0.0, 0.18),
-                Rotation3d(
-                    Rotation2d.fromDegrees(45.0),
-                    Rotation2d.fromDegrees(0.0),
-                    Rotation2d.fromDegrees(0.0)
-                ),
-                AprilTagsStdDevs(
-                    RobotPoseStdDevs(0.0, 0.0, 0.0),
-                    RobotPoseStdDevs(0.0 ,0.0 ,0.0)
-                )
+                "Webcam 1",
+                0,
+                Constants.MAX_TRUST_RANGE,
+                10.0,
+                Constants.CAMERA_POSITION,
+                Constants.CAMERA_ROTATION,
+                Constants.APRIL_TAG_STD_DEVS
             )
         }
     }
 
+
+    private val visionEstimation: Pose2d get() =
+        if (USE_VISION) {
+            blobCamera!!.estimatedPose!!
+        } else {
+            Pose2d(
+                Translation2d(0.0, 0.0),
+                Rotation2d.fromDegrees(0.0),
+                RobotPoseStdDevs(0.0, 0.0, 0.0)
+            )
+        }
     private val currentAngle: Rotation2d
         get() = imu?.currentYaw ?: Rotation2d.fromDegrees(0.0)
 
@@ -126,36 +136,32 @@ object MecanumSubsystem: Subsystem() {
 
     // Telemetry
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
-
-        telemetry.addData("Angle deg", currentAngle.asDegrees)
-        telemetry.addData("Requested chassis speeds angle deg", requestedChassisSpeedsTranslation.rotation.asDegrees)
-
-        // FL, BR, FR, BL
-        if(wheelVelocitySetpoints.lastIndex == 3) {
-        telemetry.addData("Commanded velocity FL RPM", wheelVelocitySetpoints[0].asRPM)
-        telemetry.addData("Commanded velocity BR RPM", wheelVelocitySetpoints[1].asRPM)
-        telemetry.addData("Commanded velocity FR RPM", wheelVelocitySetpoints[2].asRPM)
-        telemetry.addData("Commanded velocity BL RPM", wheelVelocitySetpoints[3].asRPM)
-        } else {
-            telemetry.addData("Commanded velocity FL RPM", 0.0)
-            telemetry.addData("Commanded velocity BR RPM", 0.0)
-            telemetry.addData("Commanded velocity FR RPM", 0.0)
-            telemetry.addData("Commanded velocity BL RPM", 0.0)
-        }
-        // telemetry.addData("Pose X", aprilTagCamera!!.estimatedPose?.translation2d?.x)
-        // telemetry.addData("Pose Y", aprilTagCamera!!.estimatedPose?.translation2d?.y)
-        // telemetry.addData("Pose Rotation", aprilTagCamera!!.estimatedPose?.rotation2d?.asDegrees)
-
-        if (wheelVelocitySetpoints.size == 4) {
-            dashboardPacket.put("FL setpoint RPM", wheelVelocitySetpoints[0].asRPM)
-            dashboardPacket.put("BR setpoint RPM", wheelVelocitySetpoints[1].asRPM)
-            dashboardPacket.put("FR setpoint RPM", wheelVelocitySetpoints[2].asRPM)
-            dashboardPacket.put("BL setpoint RPM", wheelVelocitySetpoints[3].asRPM)
-
-            dashboardPacket.put("FL velocity RPM", motors[0].currentVelocity.asRPM)
-            dashboardPacket.put("BR velocity RPM", motors[1].currentVelocity.asRPM)
-            dashboardPacket.put("FR velocity RPM", motors[2].currentVelocity.asRPM)
-            dashboardPacket.put("BL velocity RPM", motors[3].currentVelocity.asRPM)
-        }
+//        telemetry.addData("Angle deg", currentAngle.asDegrees)
+//        telemetry.addData("Requested chassis speeds angle deg", requestedChassisSpeedsTranslation.rotation.asDegrees)
+//
+//        // FL, BR, FR, BL
+//        if(wheelVelocitySetpoints.lastIndex == 3) {
+//        telemetry.addData("Commanded velocity FL RPM", wheelVelocitySetpoints[0].asRPM)
+//        telemetry.addData("Commanded velocity BR RPM", wheelVelocitySetpoints[1].asRPM)
+//        telemetry.addData("Commanded velocity FR RPM", wheelVelocitySetpoints[2].asRPM)
+//        telemetry.addData("Commanded velocity BL RPM", wheelVelocitySetpoints[3].asRPM)
+//        } else {
+//            telemetry.addData("Commanded velocity FL RPM", 0.0)
+//            telemetry.addData("Commanded velocity BR RPM", 0.0)
+//            telemetry.addData("Commanded velocity FR RPM", 0.0)
+//            telemetry.addData("Commanded velocity BL RPM", 0.0)
+//        }
+//
+//        if (wheelVelocitySetpoints.size == 4) {
+//            dashboardPacket.put("FL setpoint RPM", wheelVelocitySetpoints[0].asRPM)
+//            dashboardPacket.put("BR setpoint RPM", wheelVelocitySetpoints[1].asRPM)
+//            dashboardPacket.put("FR setpoint RPM", wheelVelocitySetpoints[2].asRPM)
+//            dashboardPacket.put("BL setpoint RPM", wheelVelocitySetpoints[3].asRPM)
+//
+//            dashboardPacket.put("FL velocity RPM", motors[0].currentVelocity.asRPM)
+//            dashboardPacket.put("BR velocity RPM", motors[1].currentVelocity.asRPM)
+//            dashboardPacket.put("FR velocity RPM", motors[2].currentVelocity.asRPM)
+//            dashboardPacket.put("BL velocity RPM", motors[3].currentVelocity.asRPM)
+//        }
     }
 }
