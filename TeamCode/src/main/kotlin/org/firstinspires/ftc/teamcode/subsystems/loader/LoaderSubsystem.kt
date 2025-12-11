@@ -55,6 +55,7 @@ object LoaderSubsystem: Subsystem() {
         private set
     var ball3Color: BallColor = BallColor.UNKNOWN
         private set
+    // TODO: Add GetClosestBall
 
     // Roulette functions
     private var angleSetpoint = Rotation2d.fromDegrees(0.0)
