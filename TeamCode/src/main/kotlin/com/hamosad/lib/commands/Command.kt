@@ -139,6 +139,18 @@ class ParallelRaceCommandGroup(vararg commands: Command): Command() {
     }
 }
 
+class FinallyCommand(val command: Command, val action: (Boolean) -> Unit): Command() {
+    override val requirements: List<Subsystem> = command.requirements
+
+    override fun initialize() = command.initialize()
+
+    override fun execute() = command.execute()
+
+    override fun isFinished(): Boolean = command.isFinished()
+
+    override fun onEnd(wasInterrupted: Boolean) = action(wasInterrupted)
+}
+
 fun Subsystem.runCommand(code: () -> Unit): Command = object: Command() {
     override val requirements: List<Subsystem> = listOf(this@runCommand)
     override fun initialize() {}
@@ -172,6 +184,8 @@ fun waitCommand(time: Seconds): Command = object: Command() {
     override fun isFinished(): Boolean = System.currentTimeMillis() > startTime + (time * 1000).toLong()
     override fun onEnd(wasInterrupted: Boolean) {}
 }
+
+infix fun Command.finallyDo(action: (Boolean) -> Unit): Command = FinallyCommand(this, action)
 
 infix fun Command.withTimeout(condition: () -> Boolean): Command = ParallelRaceCommandGroup(this, waitUntilCommand(condition))
 infix fun Command.withTimeout(time: Seconds): Command = ParallelRaceCommandGroup(this, waitCommand(time))
