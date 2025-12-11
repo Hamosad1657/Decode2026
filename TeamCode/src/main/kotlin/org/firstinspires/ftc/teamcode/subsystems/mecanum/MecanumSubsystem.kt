@@ -8,6 +8,7 @@ import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.PIDController
+import com.hamosad.lib.math.Pose2d
 import com.hamosad.lib.math.Rotation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.Translation2d
@@ -36,8 +37,8 @@ object MecanumSubsystem: Subsystem() {
     )
     private var imu: HaIMU? = null
 
-    var USE_VISION = false
-    var blobCamera: HaColorCamera? = null
+    var USE_VISION = true
+    var blobCamera: HaAprilTagCamera? = null
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -55,24 +56,30 @@ object MecanumSubsystem: Subsystem() {
         imu = HaIMU("IMU", hardwareMap!!)
 
         if (USE_VISION) {
-            blobCamera = HaColorCamera(
+            blobCamera = HaAprilTagCamera(
                 hardwareMap!!,
                 "Webcam 1",
                 0,
-                ColorRange(
-                    ColorSpace.RGB,
-                    org.opencv.core.Scalar(30.0, 120.0, 150.0),
-                    org.opencv.core.Scalar(60.0, 170.0, 255.0)),
-                5,
-                5,
-                5,
-                ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                150.0,
-                10000.0,
+                Constants.MAX_TRUST_RANGE,
+                10.0,
+                Constants.CAMERA_POSITION,
+                Constants.CAMERA_ROTATION,
+                Constants.APRIL_TAG_STD_DEVS
             )
         }
     }
 
+
+    private val visionEstimation: Pose2d get() =
+        if (USE_VISION) {
+            blobCamera!!.estimatedPose!!
+        } else {
+            Pose2d(
+                Translation2d(0.0, 0.0),
+                Rotation2d.fromDegrees(0.0),
+                RobotPoseStdDevs(0.0, 0.0, 0.0)
+            )
+        }
     private val currentAngle: Rotation2d
         get() = imu?.currentYaw ?: Rotation2d.fromDegrees(0.0)
 
@@ -129,8 +136,6 @@ object MecanumSubsystem: Subsystem() {
 
     // Telemetry
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
-
-        telemetry.addData("has targets", blobCamera?.bestBlob != null)
 //        telemetry.addData("Angle deg", currentAngle.asDegrees)
 //        telemetry.addData("Requested chassis speeds angle deg", requestedChassisSpeedsTranslation.rotation.asDegrees)
 //
