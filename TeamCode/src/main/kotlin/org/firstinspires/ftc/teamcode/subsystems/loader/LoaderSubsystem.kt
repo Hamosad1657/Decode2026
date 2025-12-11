@@ -11,6 +11,9 @@ import com.hamosad.lib.math.PIDController
 import com.hamosad.lib.math.Rotation2d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import kotlin.math.PI
+import kotlin.math.absoluteValue
+import kotlin.math.floor
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderConstants as Constants
 
 object LoaderSubsystem: Subsystem() {
@@ -36,9 +39,14 @@ object LoaderSubsystem: Subsystem() {
     // Properties
     private val rouletteAngle: Rotation2d
         get() = armMotor?.currentPosition ?: Rotation2d.fromDegrees(0.0) // Encoder is connected to the arm motor's encoder port
+    private val absoluteRouletteAngle: Rotation2d
+        get() {
+            val currentPosition = rouletteAngle
+            return Rotation2d.fromDegrees(currentPosition.asDegrees - floor(currentPosition.asDegrees / 360) * 360)
+        }
 
     val isAtSetpoint: Boolean
-        get() = (rouletteAngle.asDegrees in (
+        get() = (absoluteRouletteAngle.asDegrees in (
                 angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees))
 
     var ball1Color: BallColor = BallColor.UNKNOWN
@@ -51,23 +59,31 @@ object LoaderSubsystem: Subsystem() {
     // Roulette functions
     private var angleSetpoint = Rotation2d.fromDegrees(0.0)
     fun updateRouletteControl(newSetpoint: Rotation2d = angleSetpoint) {
-        // TODO: Add closer side approximation
         angleSetpoint = newSetpoint
-        rouletteServo?.setVoltage(rouletteController.calculate(rouletteAngle.asRadians, angleSetpoint.asRadians))
+        var errorRad = angleSetpoint.asRadians - absoluteRouletteAngle.asRadians
+
+        val shouldMoveCounterClockwise = (errorRad) in 0.0..PI || (errorRad) in -2*PI..-PI
+
+        errorRad = if (shouldMoveCounterClockwise) errorRad.absoluteValue else -errorRad.absoluteValue
+
+        rouletteServo?.setVoltage(rouletteController.calculate(
+            rouletteAngle.asRadians,
+            rouletteAngle.asRadians + errorRad
+        ))
     }
 
     private fun determineCurrentColor(): BallColor {
-        if (colorSensor?.isInColorRange(Constants.GREEN_COLOR, Constants.COLOR_SENSOR_TOLERANCE) ?: false) {
-            return BallColor.GREEN
+        return if (colorSensor?.isInColorRange(Constants.GREEN_COLOR, Constants.COLOR_SENSOR_TOLERANCE) ?: false) {
+            BallColor.GREEN
         } else if (colorSensor?.isInColorRange(Constants.PURPLE_COLOR, Constants.COLOR_SENSOR_TOLERANCE) ?: false) {
-            return BallColor.PURPLE
+            BallColor.PURPLE
         } else {
-            return BallColor.UNKNOWN
+            BallColor.UNKNOWN
         }
     }
 
     private fun updateBallColors() {
-        when (rouletteAngle.asDegrees) {
+        when (absoluteRouletteAngle.asDegrees) {
             in (Constants.BALL_1_AT_COLOR_SENSOR.asDegrees - Constants.COLOR_SENSOR_ANGLE_TOLERANCE.asDegrees)..(
                     Constants.BALL_1_AT_COLOR_SENSOR.asDegrees + Constants.COLOR_SENSOR_ANGLE_TOLERANCE.asDegrees) -> {
                 ball1Color = determineCurrentColor()
