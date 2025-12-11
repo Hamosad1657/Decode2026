@@ -14,6 +14,7 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion
 class HaColorCamera(
     hardwareMap: HardwareMap,
     name: String,
+    visionPortalNumber: Int,
     colorRange: ColorRange,
     erodeSize: Int,
     dilateSize: Int,
@@ -24,7 +25,7 @@ class HaColorCamera(
     contourColor: Int?,
     boxFitColor: Int?,
     pixelWidth: Int = 640, pixelLength: Int = 480,
-) : HaCamera(hardwareMap, name, 5, colorProcessor, pixelWidth, pixelLength) {
+) : HaCamera(hardwareMap, name, visionPortalNumber, colorProcessor, pixelWidth, pixelLength) {
 
     companion object {
         private lateinit var colorProcessor: ColorBlobLocatorProcessor
@@ -50,7 +51,7 @@ class HaColorCamera(
         colorProcessor.setSort(ColorBlobLocatorProcessor.BlobSort(blobCriteria, SortOrder.DESCENDING))
         colorProcessor.addFilter(ColorBlobLocatorProcessor.BlobFilter(blobCriteria, minBlobFilter, maxBlobFilter))
     }
-    
+
     val results: List<ColorBlobLocatorProcessor.Blob> get() = colorProcessor.blobs
     val numberOfBlobs: Int get() = results.size
     val bestBlob: ColorBlobLocatorProcessor.Blob get() = results[0]
