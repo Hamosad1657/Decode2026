@@ -107,7 +107,7 @@ object LoaderSubsystem: Subsystem() {
         armMotor?.setVoltage(Constants.ARM_MOTOR_VOLTAGE)
     }
 
-    fun stopLoadingFromShooter() {
+    fun stopLoadingToShooter() {
         armServo?.currentCommandedPosition = Constants.RETRACTED_ARM_ANGLE
         armMotor?.stopMotor()
     }
