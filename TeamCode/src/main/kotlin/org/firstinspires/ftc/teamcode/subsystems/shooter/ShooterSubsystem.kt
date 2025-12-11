@@ -52,7 +52,9 @@ object ShooterSubsystem: Subsystem() {
 
     fun setHoodAngle(desiredAngle: Rotation2d) {
         if (desiredAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
-            servo?.setVoltage(hoodAnglePIDController.calculate(currentHoodAngle.asDegrees, desiredAngle.asDegrees))
+            servo?.setVoltage(hoodAnglePIDController.calculate(
+                currentHoodAngle.asDegrees,
+                   (desiredAngle.asDegrees - ShooterConstants.MIN_HOOD_ANGLE.asDegrees) / ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO))
         }
     }
 
