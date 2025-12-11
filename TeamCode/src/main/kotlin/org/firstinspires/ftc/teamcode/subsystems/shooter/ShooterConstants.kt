@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystems.shooter
 
 import com.hamosad.lib.math.Amps
+import com.hamosad.lib.math.AngularVelocity
+import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.PIDGains
 import com.hamosad.lib.math.Rotation2d
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Servo
+
+data class ShooterState(val angle: Rotation2d, val speed: AngularVelocity)
 
 object ShooterConstants {
     val WHEEL_VELOCITY_GAINS = PIDGains(
@@ -34,4 +38,12 @@ object ShooterConstants {
 
     const val CURRENT_THRESHOLD: Amps = 0.0
 
+    // KINEMATICS
+    val DISTANCE_TO_ANGLE_TABLE: Map<Length, Rotation2d> = mapOf(
+        Pair(Length.fromMeters(0.0), Rotation2d.fromDegrees(0.0))
+    )
+
+    val DISTANCE_TO_VELOCITY_TABLE: Map<Length, AngularVelocity> = mapOf(
+        Pair(Length.fromMeters(0.0), AngularVelocity.fromRPM(0.0))
+    )
 }
