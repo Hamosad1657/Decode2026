@@ -6,23 +6,16 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.PIDController
 import com.hamosad.lib.math.Pose2d
 import com.hamosad.lib.math.Rotation2d
-import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.Translation2d
-import com.hamosad.lib.math.Translation3d
-import com.hamosad.lib.vision.AprilTagsStdDevs
 import com.hamosad.lib.vision.HaAprilTagCamera
-import com.hamosad.lib.vision.HaColorCamera
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor
-import org.firstinspires.ftc.vision.opencv.ColorRange
-import org.firstinspires.ftc.vision.opencv.ColorSpace
+import org.firstinspires.ftc.teamcode.subsystems.loader.Pattern
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumKinematics as Kinematics
 
@@ -38,7 +31,7 @@ object MecanumSubsystem: Subsystem() {
     private var imu: HaIMU? = null
 
     const val USE_VISION = false
-    var blobCamera: HaAprilTagCamera? = null
+    var aprilTagCamera: HaAprilTagCamera? = null
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -57,7 +50,7 @@ object MecanumSubsystem: Subsystem() {
 
         // VISION
         if (USE_VISION) {
-            blobCamera = HaAprilTagCamera(
+            aprilTagCamera = HaAprilTagCamera(
                 hardwareMap!!,
                 "Webcam 1",
                 0,
@@ -73,11 +66,30 @@ object MecanumSubsystem: Subsystem() {
 
     private val visionEstimation: Pose2d
         get() =
-        blobCamera?.estimatedPose ?: Pose2d(
+        aprilTagCamera?.estimatedPose ?: Pose2d(
             Translation2d(0.0, 0.0),
             Rotation2d.fromDegrees(0.0),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
+
+    val detectedPattern: Pattern get() =
+        if (aprilTagCamera != null) {
+            if (aprilTagCamera!!.isTagDetected(Pattern.PPG.id)) {
+                Pattern.PPG
+            } else if (aprilTagCamera!!.isTagDetected(Pattern.PGP.id)) {
+                Pattern.PGP
+            } else if (aprilTagCamera!!.isTagDetected(Pattern.GPP.id)) {
+                Pattern.GPP
+            } else if (previousPattern != Pattern.UNKNOWN){
+                previousPattern
+            } else {
+                Pattern.UNKNOWN
+            }
+        }
+        else {
+            Pattern.UNKNOWN
+        }
+    val previousPattern get() = detectedPattern
 
     private val currentAngle: Rotation2d
         get() = imu?.currentYaw ?: Rotation2d.fromDegrees(0.0)

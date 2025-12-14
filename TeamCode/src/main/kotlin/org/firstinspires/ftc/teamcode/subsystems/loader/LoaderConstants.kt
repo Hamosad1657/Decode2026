@@ -54,11 +54,17 @@ object LoaderConstants {
     val OPEN_ARM_ANGLE = Rotation2d.fromDegrees(0.0)
 
     const val ARM_MOTOR_VOLTAGE: Volts = 6.0
-
 }
 
 enum class BallColor {
     PURPLE,
     GREEN,
     UNKNOWN,
+}
+// Hi
+enum class Pattern(val pattern: Array<BallColor>, val id: Int) {
+    PPG(arrayOf(BallColor.PURPLE, BallColor.PURPLE, BallColor.GREEN), 23),
+    PGP(arrayOf(BallColor.PURPLE, BallColor.GREEN, BallColor.PURPLE), 22),
+    GPP(arrayOf(BallColor.GREEN, BallColor.PURPLE, BallColor.PURPLE), 21),
+    UNKNOWN(arrayOf(BallColor.UNKNOWN, BallColor.UNKNOWN, BallColor.UNKNOWN), 0),
 }
