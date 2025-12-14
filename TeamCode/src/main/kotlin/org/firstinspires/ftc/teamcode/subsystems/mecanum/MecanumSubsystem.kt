@@ -37,7 +37,7 @@ object MecanumSubsystem: Subsystem() {
     )
     private var imu: HaIMU? = null
 
-    var USE_VISION = true
+    const val USE_VISION = false
     var blobCamera: HaAprilTagCamera? = null
 
     override fun init(newHardwareMap: HardwareMap) {
@@ -55,6 +55,7 @@ object MecanumSubsystem: Subsystem() {
 
         imu = HaIMU("IMU", hardwareMap!!)
 
+        // VISION
         if (USE_VISION) {
             blobCamera = HaAprilTagCamera(
                 hardwareMap!!,
@@ -70,16 +71,14 @@ object MecanumSubsystem: Subsystem() {
     }
 
 
-    private val visionEstimation: Pose2d get() =
-        if (USE_VISION) {
-            blobCamera!!.estimatedPose!!
-        } else {
-            Pose2d(
-                Translation2d(0.0, 0.0),
-                Rotation2d.fromDegrees(0.0),
-                RobotPoseStdDevs(0.0, 0.0, 0.0)
-            )
-        }
+    private val visionEstimation: Pose2d
+        get() =
+        blobCamera?.estimatedPose ?: Pose2d(
+            Translation2d(0.0, 0.0),
+            Rotation2d.fromDegrees(0.0),
+            RobotPoseStdDevs(0.0, 0.0, 0.0)
+        )
+
     private val currentAngle: Rotation2d
         get() = imu?.currentYaw ?: Rotation2d.fromDegrees(0.0)
 
