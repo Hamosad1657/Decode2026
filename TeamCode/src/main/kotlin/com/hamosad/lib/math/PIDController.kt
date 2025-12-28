@@ -24,7 +24,7 @@ class PIDController(private var p: Double = 0.0, private var i: Double = 0.0, pr
         val error = setpoint - measurement
         val proportional = p * error
         val integral = lastIntegral + i * (error * deltaT / 1000.0)
-        val derivative = if (deltaT > 0L) (error - lastError) / deltaT else 0.0
+        val derivative = if (deltaT > 0L) d * (error - lastError) / deltaT else 0.0
 
         lastError = error
         lastIntegral = integral
