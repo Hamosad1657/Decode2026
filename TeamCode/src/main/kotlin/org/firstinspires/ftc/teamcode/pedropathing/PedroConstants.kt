@@ -30,14 +30,16 @@ object PedroConstants {
         rightFrontMotorName = "FR"
         leftRearMotorName = "BL"
         leftFrontEncoderDirection = Encoder.REVERSE
-        rightRearEncoderDirection = Encoder.REVERSE
-        rightFrontEncoderDirection = Encoder.REVERSE
+        rightRearEncoderDirection = Encoder.FORWARD
+        rightFrontEncoderDirection = Encoder.FORWARD
         leftRearEncoderDirection = Encoder.REVERSE
 
         robot_Length = 13.188
         robot_Width = 16.535
 
-        forwardTicksToInches = -5.449
+        forwardTicksToInches = 0.00959
+        strafeTicksToInches = 0.0588
+        turnTicksToInches = 0.012349
     }
 
     // Following tuning specific constants
