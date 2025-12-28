@@ -14,7 +14,6 @@ import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.HaPose2d
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.HaTranslation2d
-import com.hamosad.lib.math.MPS
 import com.hamosad.lib.math.toPIDFController
 import com.hamosad.lib.vision.HaAprilTagCamera
 import com.hamosad.lib.vision.RobotPoseStdDevs
