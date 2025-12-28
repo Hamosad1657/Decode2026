@@ -2,14 +2,12 @@ package com.hamosad.lib.components.motors
 
 import com.hamosad.lib.math.Amps
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.PIDController
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 
 enum class DCMotorStopMode {
@@ -39,7 +37,7 @@ class HaMotor(name: String, hardwareMap: HardwareMap, val type: MotorType) {
         }
 
     val currentVelocity: AngularVelocity get() = AngularVelocity.fromRPS(motor.velocity / type.ticksPerRotation)
-    val currentPosition: Rotation2d get() = Rotation2d.fromRotations(motor.currentPosition / type.ticksPerRotation)
+    val currentPosition: HaRotation2d get() = HaRotation2d.fromRotations(motor.currentPosition / type.ticksPerRotation)
     val motorCurrent: Amps get() = motor.getCurrent(CurrentUnit.AMPS)
 
     // Basic motor control
