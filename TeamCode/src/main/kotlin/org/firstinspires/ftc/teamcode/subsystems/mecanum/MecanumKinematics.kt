@@ -4,7 +4,6 @@ import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.Translation2d
 import kotlin.math.PI
 import kotlin.math.absoluteValue
-import kotlin.math.sqrt
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 
 data class ChassisSpeeds(val translation: Translation2d, val omega: AngularVelocity)
@@ -52,8 +51,10 @@ object MecanumKinematics {
     }
 
     fun translationToMotorVelocities(speed: Translation2d): List<AngularVelocity> {
-        val angularVelocityX = AngularVelocity.fromRPS(speed.x / (sqrt(2.0) * PI * Constants.WHEEL_RADIUS.asMeters))
-        val angularVelocityY = AngularVelocity.fromRPS(speed.y / (sqrt(2.0) * PI * Constants.WHEEL_RADIUS.asMeters))
+        val wheelCircumference = 2.0 * PI * Constants.WHEEL_RADIUS.asMeters
+
+        val angularVelocityX = AngularVelocity.fromRPS(speed.x / wheelCircumference)
+        val angularVelocityY = AngularVelocity.fromRPS(speed.y / wheelCircumference)
 
         val unfactoredSpeeds: MutableList<AngularVelocity> = mutableListOf()
 
@@ -66,15 +67,15 @@ object MecanumKinematics {
 
     /** [angularVelocity] is clockwise positive. */
     fun angularVelocityToMotorVelocities(angularVelocity: AngularVelocity): List<AngularVelocity> {
-        val angularVelocity = AngularVelocity.fromRPS(
-            angularVelocity.asRPS * Constants.CHASSIS_RADIUS.asMeters / Constants.WHEEL_RADIUS.asMeters
+        val wheelAngularVelocity = AngularVelocity.fromRPS(
+            angularVelocity.asRadPS * Constants.CHASSIS_RADIUS.asMeters / Constants.WHEEL_RADIUS.asMeters
         )
 
         val speeds: MutableList<AngularVelocity> = mutableListOf()
         for (relation in clockwiseRotationWheelVelocityRelations) {
-            speeds.add(angularVelocity * relation)
+            speeds.add(wheelAngularVelocity * relation)
         }
-        return speeds.toList()
+        return factorSpeeds(speeds.toList())
     }
 
     fun chassisSpeedsToMotorVelocities(chassisSpeeds: ChassisSpeeds): List<AngularVelocity> {
