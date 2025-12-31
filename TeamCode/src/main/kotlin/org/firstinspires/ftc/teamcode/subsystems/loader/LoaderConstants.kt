@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.loader
 
 import com.hamosad.lib.components.sensors.Color
 import com.hamosad.lib.math.PIDGains
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Servo
@@ -19,7 +19,7 @@ object LoaderConstants {
     val ARM_SERVO_DIRECTION = Servo.Direction.FORWARD
     val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.FORWARD
 
-    val ARM_SERVO_RANGE = Rotation2d.fromDegrees(180.0)
+    val ARM_SERVO_RANGE = HaRotation2d.fromDegrees(180.0)
 
     // PID GAINS
     val ROULETTE_ANGLE_GAINS = PIDGains(
@@ -29,29 +29,29 @@ object LoaderConstants {
     )
 
     // ROULETTE VALUES (Counter clockwise increasing)
-    val BALL_1_AT_SHOOTER = Rotation2d.fromDegrees(0.0)
-    val BALL_1_AT_INTAKE = BALL_1_AT_SHOOTER + Rotation2d.fromDegrees(90.0)
-    val BALL_1_AT_COLOR_SENSOR = BALL_1_AT_SHOOTER - Rotation2d.fromDegrees(45.0)
+    val BALL_1_AT_SHOOTER = HaRotation2d.fromDegrees(0.0)
+    val BALL_1_AT_INTAKE = BALL_1_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
+    val BALL_1_AT_COLOR_SENSOR = BALL_1_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
 
-    val BALL_2_AT_SHOOTER = Rotation2d.fromDegrees(120.0)
-    val BALL_2_AT_INTAKE = BALL_2_AT_SHOOTER + Rotation2d.fromDegrees(90.0)
-    val BALL_2_AT_COLOR_SENSOR = BALL_2_AT_SHOOTER - Rotation2d.fromDegrees(45.0)
+    val BALL_2_AT_SHOOTER = HaRotation2d.fromDegrees(120.0)
+    val BALL_2_AT_INTAKE = BALL_2_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
+    val BALL_2_AT_COLOR_SENSOR = BALL_2_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
 
 
-    val BALL_3_AT_SHOOTER = Rotation2d.fromDegrees(240.0)
-    val BALL_3_AT_INTAKE = BALL_3_AT_SHOOTER + Rotation2d.fromDegrees(90.0)
-    val BALL_3_AT_COLOR_SENSOR = BALL_3_AT_SHOOTER - Rotation2d.fromDegrees(45.0)
+    val BALL_3_AT_SHOOTER = HaRotation2d.fromDegrees(240.0)
+    val BALL_3_AT_INTAKE = BALL_3_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
+    val BALL_3_AT_COLOR_SENSOR = BALL_3_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
 
-    val ROULETTE_TOLERANCE = Rotation2d.fromDegrees(4.0)
+    val ROULETTE_TOLERANCE = HaRotation2d.fromDegrees(4.0)
 
-    val COLOR_SENSOR_ANGLE_TOLERANCE = Rotation2d.fromDegrees(4.0)
+    val COLOR_SENSOR_ANGLE_TOLERANCE = HaRotation2d.fromDegrees(4.0)
     const val COLOR_SENSOR_TOLERANCE: Int = 30
     val GREEN_COLOR = Color(0, 255, 0)
     val PURPLE_COLOR = Color(255, 0, 255)
 
     // ARM VALUES
-    val RETRACTED_ARM_ANGLE = Rotation2d.fromDegrees(0.0)
-    val OPEN_ARM_ANGLE = Rotation2d.fromDegrees(0.0)
+    val RETRACTED_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
+    val OPEN_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
 
     const val ARM_MOTOR_VOLTAGE: Volts = 6.0
 }

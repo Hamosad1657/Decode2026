@@ -7,8 +7,8 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.HaServoMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaColorSensor
-import com.hamosad.lib.math.PIDController
-import com.hamosad.lib.math.Rotation2d
+import com.arcrobotics.ftclib.controller.PIDFController
+import com.hamosad.lib.math.HaRotation2d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.math.PI
@@ -18,7 +18,12 @@ import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderConstants as Const
 
 object LoaderSubsystem: Subsystem() {
     private var rouletteServo: HaCRServoMotor? = null
-    private val rouletteController = PIDController(Constants.ROULETTE_ANGLE_GAINS)
+    private val rouletteController = PIDFController(
+        Constants.ROULETTE_ANGLE_GAINS.p,
+        Constants.ROULETTE_ANGLE_GAINS.i,
+        Constants.ROULETTE_ANGLE_GAINS.d,
+        Constants.ROULETTE_ANGLE_GAINS.f
+    )
 
     private var colorSensor: HaColorSensor? = null
 
@@ -37,12 +42,12 @@ object LoaderSubsystem: Subsystem() {
         armMotor?.direction = Constants.ARM_MOTOR_DIRECTION
     }
     // Properties
-    private val rouletteAngle: Rotation2d
-        get() = armMotor?.currentPosition ?: Rotation2d.fromDegrees(0.0) // Encoder is connected to the arm motor's encoder port
-    private val absoluteRouletteAngle: Rotation2d
+    private val rouletteAngle: HaRotation2d
+        get() = armMotor?.currentPosition ?: HaRotation2d.fromDegrees(0.0) // Encoder is connected to the arm motor's encoder port
+    private val absoluteRouletteAngle: HaRotation2d
         get() {
             val currentPosition = rouletteAngle
-            return Rotation2d.fromDegrees(currentPosition.asDegrees - floor(currentPosition.asDegrees / 360) * 360)
+            return HaRotation2d.fromDegrees(currentPosition.asDegrees - floor(currentPosition.asDegrees / 360) * 360)
         }
 
     val isAtSetpoint: Boolean
@@ -58,8 +63,8 @@ object LoaderSubsystem: Subsystem() {
     // TODO: Add GetClosestBall
 
     // Roulette functions
-    private var angleSetpoint = Rotation2d.fromDegrees(0.0)
-    fun updateRouletteControl(newSetpoint: Rotation2d = angleSetpoint) {
+    private var angleSetpoint = HaRotation2d.fromDegrees(0.0)
+    fun updateRouletteControl(newSetpoint: HaRotation2d = angleSetpoint) {
         angleSetpoint = newSetpoint
         var errorRad = angleSetpoint.asRadians - absoluteRouletteAngle.asRadians
 

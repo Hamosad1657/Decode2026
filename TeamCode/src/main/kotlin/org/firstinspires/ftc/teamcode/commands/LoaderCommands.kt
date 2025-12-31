@@ -7,7 +7,7 @@ import com.hamosad.lib.commands.finallyDo
 import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.commands.runOnce
 import com.hamosad.lib.commands.until
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaRotation2d
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallColor
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 
@@ -35,7 +35,7 @@ enum class Ball {
  */
 
 // GENERAL
-fun LoaderSubsystem.holdRoulettePositionCommand(position: Rotation2d): Command = runCommand {
+fun LoaderSubsystem.holdRoulettePositionCommand(position: HaRotation2d): Command = runCommand {
     updateRouletteControl(position)
     stopLoadingToShooter()
 }
