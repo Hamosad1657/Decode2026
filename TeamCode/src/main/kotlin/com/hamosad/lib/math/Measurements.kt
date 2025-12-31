@@ -1,14 +1,14 @@
 package com.hamosad.lib.math
 
+import com.arcrobotics.ftclib.geometry.Rotation2d
+import com.arcrobotics.ftclib.geometry.Translation2d
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import kotlin.math.PI
-import kotlin.math.absoluteValue
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
-import kotlin.math.tanh
 
 private const val INCH_TO_METER_RATIO = 0.0254
 
@@ -37,13 +37,13 @@ class Length private constructor(private val lengthMeters: Double) {
     operator fun div(other: Int): Length = Length(this.lengthMeters / other)
 }
 
-class Rotation2d private constructor(private val angleRotations: Double) {
+class HaRotation2d private constructor(private val angleRotations: Double) {
     companion object {
-        fun fromRotations(angleRotations: Double): Rotation2d = Rotation2d(angleRotations)
+        fun fromRotations(angleRotations: Double): HaRotation2d = HaRotation2d(angleRotations)
 
-        fun fromDegrees(angleDegrees: Double): Rotation2d = Rotation2d(angleDegrees / 360)
+        fun fromDegrees(angleDegrees: Double): HaRotation2d = HaRotation2d(angleDegrees / 360)
 
-        fun fromRadians(angleRadians: Double): Rotation2d = Rotation2d(angleRadians / (2 * PI))
+        fun fromRadians(angleRadians: Double): HaRotation2d = HaRotation2d(angleRadians / (2 * PI))
     }
 
     val asRotations = angleRotations
@@ -53,39 +53,41 @@ class Rotation2d private constructor(private val angleRotations: Double) {
     val cosine = cos(asRadians)
     val sine = sin(asRadians)
 
-    operator fun plus(other: Rotation2d): Rotation2d = Rotation2d(this.angleRotations + other.angleRotations)
-    operator fun minus(other: Rotation2d): Rotation2d = Rotation2d(this.angleRotations - other.angleRotations)
-    operator fun times(other: Double): Rotation2d = Rotation2d(this.angleRotations * other)
-    operator fun times(other: Int): Rotation2d = Rotation2d(this.angleRotations * other)
-    operator fun div(other: Double): Rotation2d = Rotation2d(this.angleRotations / other)
-    operator fun div(other: Int): Rotation2d = Rotation2d(this.angleRotations / other)
+    fun toFTCLibR2d() = Rotation2d.fromDegrees(asDegrees)
+
+    operator fun plus(other: HaRotation2d): HaRotation2d = HaRotation2d(this.angleRotations + other.angleRotations)
+    operator fun minus(other: HaRotation2d): HaRotation2d = HaRotation2d(this.angleRotations - other.angleRotations)
+    operator fun times(other: Double): HaRotation2d = HaRotation2d(this.angleRotations * other)
+    operator fun times(other: Int): HaRotation2d = HaRotation2d(this.angleRotations * other)
+    operator fun div(other: Double): HaRotation2d = HaRotation2d(this.angleRotations / other)
+    operator fun div(other: Int): HaRotation2d = HaRotation2d(this.angleRotations / other)
 }
 
 class Rotation3d(
-    val pitchAngle: Rotation2d,
-    val yawAngle: Rotation2d,
-    val rollAngle: Rotation2d
+    val pitchAngle: HaRotation2d,
+    val yawAngle: HaRotation2d,
+    val rollAngle: HaRotation2d
     ) {
     companion object {
         fun fromRotations(pitchAngleRotations: Double, yawAngleRotations: Double, rollAngleRotations: Double): Rotation3d =
             Rotation3d(
-                Rotation2d.fromRotations(pitchAngleRotations),
-                Rotation2d.fromRotations(yawAngleRotations),
-                Rotation2d.fromRotations(rollAngleRotations)
+                HaRotation2d.fromRotations(pitchAngleRotations),
+                HaRotation2d.fromRotations(yawAngleRotations),
+                HaRotation2d.fromRotations(rollAngleRotations)
             )
 
         fun fromDegrees(pitchAngleDegrees: Double, yawAngleDegrees: Double, rollAngleDegrees: Double): Rotation3d =
             Rotation3d(
-                Rotation2d.fromDegrees(pitchAngleDegrees),
-                Rotation2d.fromDegrees(yawAngleDegrees),
-                Rotation2d.fromDegrees(rollAngleDegrees)
+                HaRotation2d.fromDegrees(pitchAngleDegrees),
+                HaRotation2d.fromDegrees(yawAngleDegrees),
+                HaRotation2d.fromDegrees(rollAngleDegrees)
             )
 
         fun fromRadians(pitchAngleRadians: Double, yawAngleRadians: Double, rollAngleRadians: Double): Rotation3d =
             Rotation3d(
-                Rotation2d.fromRadians(pitchAngleRadians),
-                Rotation2d.fromRadians(yawAngleRadians),
-                Rotation2d.fromRadians(rollAngleRadians)
+                HaRotation2d.fromRadians(pitchAngleRadians),
+                HaRotation2d.fromRadians(yawAngleRadians),
+                HaRotation2d.fromRadians(rollAngleRadians)
                 )
     }
 
@@ -150,8 +152,8 @@ class AngularVelocity private constructor(private val rps: Double) {
     operator fun div(other: Int): AngularVelocity = AngularVelocity(this.rps / other)
 }
 
-class Translation2d(val x: Double, val y: Double) {
-    constructor(length: Double, angle: Rotation2d): this(
+class HaTranslation2d(val x: Double, val y: Double) {
+    constructor(length: Double, angle: HaRotation2d): this(
         length * angle.cosine,
         length * angle.sine,
     )
@@ -159,14 +161,16 @@ class Translation2d(val x: Double, val y: Double) {
     val length: Double
         get() = sqrt(x*x + y*y)
 
-    val rotation: Rotation2d get() = Rotation2d.fromRadians(atan2(y, x))
+    val rotation: HaRotation2d get() = HaRotation2d.fromRadians(atan2(y, x))
 
-    operator fun plus(other: Translation2d): Translation2d = Translation2d(this.x + other.x, this.y + other.y)
-    operator fun minus(other: Translation2d): Translation2d = Translation2d(this.x - other.x, this.y - other.y)
-    operator fun times(other: Double): Translation2d = Translation2d(this.x * other, this.y * other)
-    operator fun times(other: Int): Translation2d = Translation2d(this.x * other, this.y * other)
-    operator fun div(other: Double): Translation2d = Translation2d(this.x / other, this.y / other)
-    operator fun div(other: Int): Translation2d = Translation2d(this.x / other, this.y / other)
+    fun toFTCLibT2d() = Translation2d(x, y)
+
+    operator fun plus(other: HaTranslation2d): HaTranslation2d = HaTranslation2d(this.x + other.x, this.y + other.y)
+    operator fun minus(other: HaTranslation2d): HaTranslation2d = HaTranslation2d(this.x - other.x, this.y - other.y)
+    operator fun times(other: Double): HaTranslation2d = HaTranslation2d(this.x * other, this.y * other)
+    operator fun times(other: Int): HaTranslation2d = HaTranslation2d(this.x * other, this.y * other)
+    operator fun div(other: Double): HaTranslation2d = HaTranslation2d(this.x / other, this.y / other)
+    operator fun div(other: Int): HaTranslation2d = HaTranslation2d(this.x / other, this.y / other)
 }
 
 class Translation3d(val x: Double, val y: Double, val z: Double) {
@@ -178,8 +182,8 @@ class Translation3d(val x: Double, val y: Double, val z: Double) {
     operator fun div(other: Int): Translation3d = Translation3d(this.x / other, this.y / other, this.z / other)
 }
 
-class Pose2d(var translation2d: Translation2d, var rotation2d: Rotation2d, var robotPoseStdDevs: RobotPoseStdDevs) {
-    fun addPoseEstimate(newPose: Pose2d) {
+class HaPose2d(var translation2d: HaTranslation2d, var rotation2d: HaRotation2d, var robotPoseStdDevs: RobotPoseStdDevs) {
+    fun addPoseEstimate(newPose: HaPose2d) {
         val translationXVariance = robotPoseStdDevs.translationX.pow(2)
         val translationYVariance = robotPoseStdDevs.translationY.pow(2)
         val rotationVariance = robotPoseStdDevs.rotation.pow(2)
@@ -195,9 +199,9 @@ class Pose2d(var translation2d: Translation2d, var rotation2d: Rotation2d, var r
 
         val newTranslationX = translation2d.x + translationXK * (newPose.translation2d.x - translation2d.x)
         val newTranslationY = translation2d.y + translationYK * (newPose.translation2d.y - translation2d.y)
-        val newRotation: Rotation2d = Rotation2d.fromRotations(rotation2d.asRotations + rotationK * (newPose.rotation2d.asRotations - rotation2d.asRotations))
+        val newRotation: HaRotation2d = HaRotation2d.fromRotations(rotation2d.asRotations + rotationK * (newPose.rotation2d.asRotations - rotation2d.asRotations))
 
-        translation2d = Translation2d(newTranslationX, newTranslationY)
+        translation2d = HaTranslation2d(newTranslationX, newTranslationY)
         rotation2d = newRotation
         robotPoseStdDevs = RobotPoseStdDevs(
             (1 - translationXK) * robotPoseStdDevs.translationX,

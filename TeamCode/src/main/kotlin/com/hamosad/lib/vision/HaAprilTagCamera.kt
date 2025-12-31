@@ -1,10 +1,10 @@
 package com.hamosad.lib.vision
 
 import com.hamosad.lib.math.Length
-import com.hamosad.lib.math.Pose2d
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaPose2d
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Rotation3d
-import com.hamosad.lib.math.Translation2d
+import com.hamosad.lib.math.HaTranslation2d
 import com.hamosad.lib.math.Translation3d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
@@ -34,9 +34,10 @@ data class AprilTagsStdDevs(
 class HaAprilTagCamera(
     hardwareMap: HardwareMap,
     name: String,
+    visionPortalNumber: Int,
     private val maxTrustRange: Length,
     private val maxDecisionMargin: Double,
-    /** X: right, Y Down, Z: forward */
+    /** X: right, Y Down, Z: forward Meters*/
     cameraPositionMeters: Translation3d,
     cameraOrientation: Rotation3d,
     private val aprilTagStdDevs: AprilTagsStdDevs,
@@ -44,7 +45,7 @@ class HaAprilTagCamera(
     videoFormat: VisionPortal.StreamFormat = VisionPortal.StreamFormat.YUY2,
     tagFamily: AprilTagProcessor.TagFamily = AprilTagProcessor.TagFamily.TAG_36h11
 ) :
-    HaCamera(hardwareMap, name, 1, run {
+    HaCamera(hardwareMap, name, visionPortalNumber, run {
         // Define Processor Builder
         val aprilTagProcessorBuilder: AprilTagProcessor.Builder = AprilTagProcessor.Builder()
             .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
@@ -114,25 +115,25 @@ class HaAprilTagCamera(
             }
 
     // the estimated pose is given in values of double I don't know why
-    val estimatedPose: Pose2d?
+    val estimatedPose: HaPose2d?
         get() {
             if (!hasTargets || !isInRange || closestTarget == null || allTargets == null) return null
             if (maxDecisionMargin < closestTarget!!.decisionMargin) return null
 
-            val bestPose = Pose2d(
-                Translation2d(
+            val bestPose = HaPose2d(
+                HaTranslation2d(
                     closestTarget!!.robotPose.position.x,
                     closestTarget!!.robotPose.position.y
                 ),
-                Rotation2d.fromRadians(closestTarget!!.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
+                HaRotation2d.fromRadians(closestTarget!!.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
                 RobotPoseStdDevs(0.0, 0.0, 0.0)
             )
 
             for (i in allTargets!!) {
                 bestPose.addPoseEstimate(
-                    Pose2d(
-                        Translation2d(i!!.robotPose.position.x, i.robotPose.position.y),
-                        Rotation2d.fromRadians(i.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
+                    HaPose2d(
+                        HaTranslation2d(i!!.robotPose.position.x, i.robotPose.position.y),
+                        HaRotation2d.fromRadians(i.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
                         //Had to use decision margin, no other info about quality of detections. Im so sorry
                         RobotPoseStdDevs(
                             i.decisionMargin.toDouble(),
