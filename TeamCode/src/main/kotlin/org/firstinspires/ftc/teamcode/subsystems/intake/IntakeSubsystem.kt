@@ -15,7 +15,7 @@ object IntakeSubsystem: Subsystem() {
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
         motor = HaMotor(Constants.MOTOR_NAME, hardwareMap!!, MotorType.GO_BUILDA5202)
-        motor?.setDirection(Constants.DIRECTION)
+        motor?.direction = Constants.DIRECTION
         motor?.stopMotor()
     }
     
