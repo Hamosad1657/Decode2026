@@ -1,7 +1,7 @@
 package com.hamosad.lib.components.Controllers
 
 import com.hamosad.lib.commands.Trigger
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.continuousDeadband
 import com.qualcomm.robotcore.hardware.Gamepad
 import kotlin.math.PI
@@ -54,22 +54,22 @@ class HaCommandController(val controller: () -> Gamepad?, val deadband: Double, 
         return -continuousDeadband(controller()?.right_stick_y?.toDouble() ?: 0.0, deadband).powerProfile(power)
     }
 
-    private fun joyStickToAngle(x: Double, y: Double): Rotation2d {
+    private fun joyStickToAngle(x: Double, y: Double): HaRotation2d {
         val theta = atan2(y, x)
-        return if (theta >= 0.0) Rotation2d.fromRadians(theta) else Rotation2d.fromRadians(2 * PI + theta)
+        return if (theta >= 0.0) HaRotation2d.fromRadians(theta) else HaRotation2d.fromRadians(2 * PI + theta)
     }
 
     /**
      * The angle the right joystick forms with the right side of the X axis.
      * Counter-clockwise positive, goes up to 360 degrees.
      */
-    fun getRightAngle(): Rotation2d = joyStickToAngle(getRightX(), getRightY())
+    fun getRightAngle(): HaRotation2d = joyStickToAngle(getRightX(), getRightY())
 
     /**
      * The angle the left joystick forms with the right side of the X axis.
      * Counter-clockwise positive, goes up to 360 degrees.
      */
-    fun getLeftAngle(): Rotation2d = joyStickToAngle(getLeftX(), getLeftY())
+    fun getLeftAngle(): HaRotation2d = joyStickToAngle(getLeftX(), getLeftY())
 }
 
 fun Double.powerProfile(power: Int): Double {

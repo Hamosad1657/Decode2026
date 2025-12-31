@@ -6,10 +6,17 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.PIDController
-import com.hamosad.lib.math.Pose2d
-import com.hamosad.lib.math.Rotation2d
-import com.hamosad.lib.math.Translation2d
+
+import com.hamosad.lib.math.Length
+import com.arcrobotics.ftclib.controller.PIDFController
+import com.hamosad.lib.math.HaPose2d
+import com.hamosad.lib.math.HaRotation2d
+import com.hamosad.lib.math.Rotation3d
+import com.hamosad.lib.math.HaTranslation2d
+import com.hamosad.lib.math.PIDGains
+import com.hamosad.lib.math.Translation3d
+import com.hamosad.lib.math.toPIDFController
+import com.hamosad.lib.vision.AprilTagsStdDevs
 import com.hamosad.lib.vision.HaAprilTagCamera
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -22,11 +29,11 @@ import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumKinematics as Ki
 object MecanumSubsystem: Subsystem() {
     // FL, BR, FR, BL
     private var motors: List<HaMotor> = listOf()
-    private val controllers: List<PIDController> = listOf(
-        PIDController(Constants.wheelGains),
-        PIDController(Constants.wheelGains),
-        PIDController(Constants.wheelGains),
-        PIDController(Constants.wheelGains),
+    private val controllers: List<PIDFController> = listOf(
+        PIDGains(Constants.wheelGains.p, Constants.wheelGains.i, Constants.wheelGains.d, Constants.wheelGains.f).toPIDFController(),
+        PIDGains(Constants.wheelGains.p, Constants.wheelGains.i, Constants.wheelGains.d, Constants.wheelGains.f).toPIDFController(),
+        PIDGains(Constants.wheelGains.p, Constants.wheelGains.i, Constants.wheelGains.d, Constants.wheelGains.f).toPIDFController(),
+        PIDGains(Constants.wheelGains.p, Constants.wheelGains.i, Constants.wheelGains.d, Constants.wheelGains.f).toPIDFController(),
     )
     private var imu: HaIMU? = null
 
@@ -64,11 +71,12 @@ object MecanumSubsystem: Subsystem() {
     }
 
 
-    private val visionEstimation: Pose2d
+    private val visionEstimation: HaPose2d
         get() =
-        aprilTagCamera?.estimatedPose ?: Pose2d(
-            Translation2d(0.0, 0.0),
-            Rotation2d.fromDegrees(0.0),
+
+        aprilTagCamera?.estimatedPose ?: HaPose2d(
+            HaTranslation2d(0.0, 0.0),
+            HaRotation2d.fromDegrees(0.0),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 
@@ -91,8 +99,8 @@ object MecanumSubsystem: Subsystem() {
         }
     val previousPattern get() = detectedPattern
 
-    private val currentAngle: Rotation2d
-        get() = imu?.currentYaw ?: Rotation2d.fromDegrees(0.0)
+    private val currentAngle: HaRotation2d
+        get() = imu?.currentYaw ?: HaRotation2d.fromDegrees(0.0)
 
     // Low level functions
     fun resetGyro() {
@@ -115,10 +123,10 @@ object MecanumSubsystem: Subsystem() {
         controlMotors(Kinematics.angularVelocityToMotorVelocities(angularVelocity))
     }
 
-    var requestedChassisSpeedsTranslation: Translation2d = Translation2d(0.0, 0.0)
+    var requestedChassisSpeedsTranslation: HaTranslation2d = HaTranslation2d(0.0, 0.0)
     fun drive(fieldRelative: Boolean, chassisSpeeds: ChassisSpeeds) {
         val updatedSpeeds = if (fieldRelative) ChassisSpeeds(
-            Translation2d(
+            HaTranslation2d(
                 chassisSpeeds.translation.length,
                 chassisSpeeds.translation.rotation - currentAngle
             ),
