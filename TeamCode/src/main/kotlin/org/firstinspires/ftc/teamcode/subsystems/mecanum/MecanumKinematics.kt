@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems.mecanum
 
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.Translation2d
+import com.hamosad.lib.math.HaTranslation2d
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 
-data class ChassisSpeeds(val translation: Translation2d, val omega: AngularVelocity)
+data class ChassisSpeeds(val translation: HaTranslation2d, val omega: AngularVelocity)
 
 object MecanumKinematics {
     // FL, BR, FR, BL
@@ -51,7 +51,7 @@ object MecanumKinematics {
         return unfactoredSpeeds.toList()
     }
 
-    fun translationToMotorVelocities(speed: Translation2d): List<AngularVelocity> {
+    fun translationToMotorVelocities(speed: HaTranslation2d): List<AngularVelocity> {
         val angularVelocityX = AngularVelocity.fromRPS(speed.x / (sqrt(2.0) * PI * Constants.WHEEL_RADIUS.asMeters))
         val angularVelocityY = AngularVelocity.fromRPS(speed.y / (sqrt(2.0) * PI * Constants.WHEEL_RADIUS.asMeters))
 
