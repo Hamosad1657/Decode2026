@@ -1,6 +1,6 @@
 package com.hamosad.lib.components.motors
 
-import com.hamosad.lib.math.Rotation2d
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -25,10 +25,10 @@ class HaCRServoMotor(name: String, hardwareMap: HardwareMap) {
     }
 }
 
-class HaServoMotor(name: String, hardwareMap: HardwareMap, private val angleRange: Rotation2d = Rotation2d.fromDegrees(180.0)) {
+class HaServoMotor(name: String, hardwareMap: HardwareMap, private val angleRange: HaRotation2d = HaRotation2d.fromDegrees(180.0)) {
     private val servo: Servo = hardwareMap.get(Servo::class.java, name)
-    var currentCommandedPosition: Rotation2d
-        get() = Rotation2d.fromRotations(servo.position * angleRange.asRotations)
+    var currentCommandedPosition: HaRotation2d
+        get() = HaRotation2d.fromRotations(servo.position * angleRange.asRotations)
         set(value) {
             if (value.asDegrees in 0.0..angleRange.asDegrees) {
                 servo.position = value.asRotations / angleRange.asRotations

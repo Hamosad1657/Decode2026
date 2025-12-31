@@ -1,7 +1,7 @@
 package com.hamosad.lib.vision
 
 import androidx.annotation.ColorInt
-import com.hamosad.lib.math.Translation2d
+import com.hamosad.lib.math.HaTranslation2d
 import com.hamosad.lib.math.Translation3d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.util.SortOrder
@@ -75,7 +75,9 @@ class HaColorCamera(
     val blobBoxHeight: Double? get() = bestBlob?.boxFit?.size?.height
     val blobBoxWidth: Double? get() = bestBlob?.boxFit?.size?.width
 
-    val blobAsCircleTranslation2d: Translation2d get() = Translation2d(bestBlob?.circle?.x?.toDouble() ?: 0.0, bestBlob?.circle?.y?.toDouble() ?: 0.0)
-    val blobAsBoxTranslation2d: Translation2d get() = Translation2d(bestBlob?.boxFit?.center?.x ?: 0.0, bestBlob?.boxFit?.center?.y ?: 0.0)
+    val blobAsCircleTranslation2d: HaTranslation2d get() = HaTranslation2d(
+        bestBlob?.circle?.x?.toDouble() ?: 0.0, bestBlob?.circle?.y?.toDouble() ?: 0.0
+    )
+    val blobAsBoxTranslation2d: HaTranslation2d get() = HaTranslation2d(bestBlob?.boxFit?.center?.x ?: 0.0, bestBlob?.boxFit?.center?.y ?: 0.0)
 
 }
