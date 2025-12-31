@@ -7,19 +7,27 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.HaServoMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.PIDController
-import com.hamosad.lib.math.Rotation2d
+import com.arcrobotics.ftclib.controller.PIDFController
+import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 object ShooterSubsystem: Subsystem() {
 
-    val speedPIDController = PIDController(ShooterConstants.WHEEL_VELOCITY_GAINS)
+    val speedPIDController = PIDFController(
+        ShooterConstants.WHEEL_VELOCITY_GAINS.p,
+        ShooterConstants.WHEEL_VELOCITY_GAINS.i,
+        ShooterConstants.WHEEL_VELOCITY_GAINS.d,
+        ShooterConstants.WHEEL_VELOCITY_GAINS.f)
     var rightMotor: HaMotor? = null
     var leftMotor: HaMotor? = null
     var servo: HaCRServoMotor? = null
-    val hoodAnglePIDController = PIDController(ShooterConstants.HOOD_ANGLE_GAINS)
+    val hoodAnglePIDController = PIDFController(
+        ShooterConstants.HOOD_ANGLE_GAINS.p,
+        ShooterConstants.HOOD_ANGLE_GAINS.i,
+        ShooterConstants.HOOD_ANGLE_GAINS.d,
+        ShooterConstants.HOOD_ANGLE_GAINS.f)
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -33,8 +41,8 @@ object ShooterSubsystem: Subsystem() {
     }
 
     val currentMotorVelocity: AngularVelocity get() = rightMotor?.currentVelocity ?: AngularVelocity.fromRPM(0.0)
-    val currentServoAngle: Rotation2d get() = leftMotor?.currentPosition ?: Rotation2d.fromDegrees(0.0) //we are using the left motor's encoder slot for the servo's encoder
-    val currentHoodAngle: Rotation2d get() = ShooterConstants.MIN_HOOD_ANGLE + currentServoAngle * ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO
+    val currentServoAngle: HaRotation2d get() = leftMotor?.currentPosition ?: HaRotation2d.fromDegrees(0.0) //we are using the left motor's encoder slot for the servo's encoder
+    val currentHoodAngle: HaRotation2d get() = ShooterConstants.MIN_HOOD_ANGLE + currentServoAngle * ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO
     val isCurrentAboveThreshold: Boolean get() = rightMotor?.isCurrentOver(ShooterConstants.CURRENT_THRESHOLD) ?: false
 
     val currentShooterVelocity: AngularVelocity get() = rightMotor?.currentVelocity?.times(
@@ -50,7 +58,7 @@ object ShooterSubsystem: Subsystem() {
         leftMotor?.stopMotor()
     }
 
-    fun setHoodAngle(desiredAngle: Rotation2d) {
+    fun setHoodAngle(desiredAngle: HaRotation2d) {
         if (desiredAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
             servo?.setVoltage(hoodAnglePIDController.calculate(
                 currentHoodAngle.asDegrees,
