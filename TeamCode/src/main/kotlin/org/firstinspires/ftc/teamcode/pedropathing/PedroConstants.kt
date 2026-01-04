@@ -37,9 +37,7 @@ object PedroConstants {
         robot_Length = 13.188
         robot_Width = 16.535
 
-        forwardTicksToInches = 0.00959
-        strafeTicksToInches = 0.0588
-        turnTicksToInches = 0.012349
+        forwardTicksToInches = 0.017109 / 1.8
     }
 
     // Following tuning specific constants

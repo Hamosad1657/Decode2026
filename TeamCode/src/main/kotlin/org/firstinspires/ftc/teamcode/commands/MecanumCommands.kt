@@ -20,7 +20,7 @@ fun MecanumSubsystem.angularVelocityDriveCommand(
     drive(fieldRelative, ChassisSpeeds(
         leftJoyY() * Constants.MAX_CHASSIS_SPEED,
         -leftJoyX() * Constants.MAX_CHASSIS_SPEED,
-        AngularVelocity.fromRPS(rightJoyX() * Constants.MAX_CHASSIS_ANGULAR_VELOCITY.asRPS).asRadPS,
+        -AngularVelocity.fromRPS(rightJoyX() * Constants.MAX_CHASSIS_ANGULAR_VELOCITY.asRPS).asRadPS,
     ))
 }
 

@@ -141,16 +141,16 @@ object MecanumSubsystem: Subsystem() {
     // Telemetry
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
         // FL, BR, FR, BL
-        if (wheelVelocitySetpoints.frontLeftMetersPerSecond == 0.0) {
-            dashboardPacket.put("FL setpoint RPM", wheelVelocitySetpoints.frontLeftMetersPerSecond)
-            dashboardPacket.put("BR setpoint RPM", wheelVelocitySetpoints.rearRightMetersPerSecond)
-            dashboardPacket.put("FR setpoint RPM", wheelVelocitySetpoints.frontRightMetersPerSecond)
-            dashboardPacket.put("BL setpoint RPM", wheelVelocitySetpoints.rearLeftMetersPerSecond)
+        if (wheelVelocitySetpoints.frontLeftMetersPerSecond != 0.0) {
+            dashboardPacket.put("FL Speed setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
+            dashboardPacket.put("BR Speed setpoint MPS", wheelVelocitySetpoints.rearRightMetersPerSecond)
+            dashboardPacket.put("FR Speed setpoint MPS", wheelVelocitySetpoints.frontRightMetersPerSecond)
+            dashboardPacket.put("BL Speed setpoint MPS", wheelVelocitySetpoints.rearLeftMetersPerSecond)
 
-            dashboardPacket.put("FL velocity RPM", motors[0].currentVelocity.asRPM)
-            dashboardPacket.put("BR velocity RPM", motors[1].currentVelocity.asRPM)
-            dashboardPacket.put("FR velocity RPM", motors[2].currentVelocity.asRPM)
-            dashboardPacket.put("BL velocity RPM", motors[3].currentVelocity.asRPM)
+            dashboardPacket.put("FL velocity MPS", motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            dashboardPacket.put("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            dashboardPacket.put("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            dashboardPacket.put("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
         }
     }
 }
