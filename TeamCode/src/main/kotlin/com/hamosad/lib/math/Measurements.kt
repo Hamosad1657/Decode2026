@@ -3,6 +3,8 @@ package com.hamosad.lib.math
 import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.arcrobotics.ftclib.geometry.Translation2d
 import com.hamosad.lib.vision.RobotPoseStdDevs
+import com.pedropathing.ftc.PoseConverter
+import com.pedropathing.geometry.Pose
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -182,8 +184,14 @@ class Translation3d(val x: Double, val y: Double, val z: Double) {
     operator fun div(other: Int): Translation3d = Translation3d(this.x / other, this.y / other, this.z / other)
 }
 
-class HaPose2d(var translation2d: HaTranslation2d, var rotation2d: HaRotation2d, var robotPoseStdDevs: RobotPoseStdDevs) {
-    fun addPoseEstimate(newPose: HaPose2d) {
+class HaPose2d(val translation2d: HaTranslation2d, val rotation2d: HaRotation2d) {
+    fun toPedroPose(): Pose{
+        return Pose(translation2d.x, translation2d.y, rotation2d.asDegrees)
+    }
+}
+
+class HaRobotPoseEstimation(var pose: HaPose2d, var robotPoseStdDevs: RobotPoseStdDevs) {
+    fun addPoseEstimate(newPose: HaRobotPoseEstimation) {
         val translationXVariance = robotPoseStdDevs.translationX.pow(2)
         val translationYVariance = robotPoseStdDevs.translationY.pow(2)
         val rotationVariance = robotPoseStdDevs.rotation.pow(2)
@@ -197,16 +205,10 @@ class HaPose2d(var translation2d: HaTranslation2d, var rotation2d: HaRotation2d,
         val translationYK = translationYVariance / (translationYVariance + newTranslationYVariance)
         val rotationK = rotationVariance / (rotationVariance + newRotationVariance)
 
-        val newTranslationX = translation2d.x + translationXK * (newPose.translation2d.x - translation2d.x)
-        val newTranslationY = translation2d.y + translationYK * (newPose.translation2d.y - translation2d.y)
-        val newRotation: HaRotation2d = HaRotation2d.fromRotations(rotation2d.asRotations + rotationK * (newPose.rotation2d.asRotations - rotation2d.asRotations))
+        val newTranslationX = pose.translation2d.x + translationXK * (newPose.pose.translation2d.x - pose.translation2d.x)
+        val newTranslationY = pose.translation2d.y + translationYK * (newPose.pose.translation2d.y - pose.translation2d.y)
+        val newRotation: HaRotation2d = HaRotation2d.fromRotations(pose.rotation2d.asRotations + rotationK * (newPose.pose.rotation2d.asRotations - pose.rotation2d.asRotations))
 
-        translation2d = HaTranslation2d(newTranslationX, newTranslationY)
-        rotation2d = newRotation
-        robotPoseStdDevs = RobotPoseStdDevs(
-            (1 - translationXK) * robotPoseStdDevs.translationX,
-            (1 - translationYK) * robotPoseStdDevs.translationY,
-            (1 - rotationK) * robotPoseStdDevs.rotation
-        )
+        pose = HaPose2d(HaTranslation2d(newTranslationX, newTranslationY), newRotation)
     }
 }
