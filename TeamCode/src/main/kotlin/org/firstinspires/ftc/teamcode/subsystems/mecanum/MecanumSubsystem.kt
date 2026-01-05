@@ -21,6 +21,7 @@ import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import kotlin.math.absoluteValue
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 
 object MecanumSubsystem: Subsystem() {
@@ -82,12 +83,45 @@ object MecanumSubsystem: Subsystem() {
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 
-    private val currentAngle: HaRotation2d
+    private val odometryEstimation: HaRobotPoseEstimation get() =
+        HaRobotPoseEstimation(
+        HaPose2d(
+            HaTranslation2d(0.0, 0.0),
+            HaRotation2d.fromDegrees(0.0)
+            ),
+        RobotPoseStdDevs(0.0, 0.0, 0.0)
+        )
+
+
+    val robotPose: HaPose2d get() =
+        if (USE_VISION && visionEstimation.pose.translation2d.y in -0.01..0.01 && visionEstimation.pose.translation2d.y in -0.01..0.01)
+            odometryEstimation.addPoseEstimate(visionEstimation) else odometryEstimation.pose
+
+    val currentAbsoluteAngle: HaRotation2d
         get() = imu?.currentYaw ?: HaRotation2d.fromDegrees(0.0)
+
+    var currentAngle: HaRotation2d = HaRotation2d.fromDegrees(0.0)
+        private set
+    private var rotations = 0
+    fun updateAngle() {
+        var newAngle = currentAbsoluteAngle
+        if (newAngle.asDegrees < 0.0) newAngle = HaRotation2d.fromDegrees(360.0 + newAngle.asDegrees)
+
+        if (((currentAngle.asDegrees - (rotations * 360.0)) - newAngle.asDegrees).absoluteValue > 45.0) {
+            if (currentAngle.asDegrees - (rotations * 360.0) > 180.0) {
+                rotations++
+            } else {
+                rotations--
+            }
+        }
+        currentAngle = HaRotation2d.fromDegrees(newAngle.asDegrees * rotations)
+    }
 
     // Low level functions
     fun resetGyro() {
         imu?.resetYaw()
+        currentAngle = HaRotation2d.fromDegrees(0.0)
+        rotations = 0
     }
 
     // Low level motor PID
@@ -117,7 +151,7 @@ object MecanumSubsystem: Subsystem() {
             chassisSpeeds.vxMetersPerSecond,
             chassisSpeeds.vyMetersPerSecond,
             chassisSpeeds.omegaRadiansPerSecond,
-            currentAngle.toFTCLibR2d(),
+            currentAbsoluteAngle.toFTCLibR2d(),
         ) else chassisSpeeds
 
         controlMotors(kinematics.toWheelSpeeds(updatedSpeeds))
