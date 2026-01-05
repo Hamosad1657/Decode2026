@@ -12,6 +12,7 @@ import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.HaPose2d
+import com.hamosad.lib.math.HaRobotPoseEstimation
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.HaTranslation2d
 import com.hamosad.lib.math.toPIDFController
@@ -74,10 +75,10 @@ object MecanumSubsystem: Subsystem() {
     }
 
 
-    private val visionEstimation: HaPose2d get() =
-        blobCamera?.estimatedPose ?: HaPose2d(
-            HaTranslation2d(0.0, 0.0),
-            HaRotation2d.fromDegrees(0.0),
+    private val visionEstimation: HaRobotPoseEstimation get() =
+        blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
+            HaPose2d(HaTranslation2d(0.0, 0.0),
+            HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 

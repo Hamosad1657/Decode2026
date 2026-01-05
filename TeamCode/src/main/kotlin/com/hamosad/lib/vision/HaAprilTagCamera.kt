@@ -2,6 +2,7 @@ package com.hamosad.lib.vision
 
 import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.HaPose2d
+import com.hamosad.lib.math.HaRobotPoseEstimation
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.HaTranslation2d
@@ -115,25 +116,26 @@ class HaAprilTagCamera(
             }
 
     // the estimated pose is given in values of double I don't know why
-    val estimatedPose: HaPose2d?
+    val estimatedPose: HaRobotPoseEstimation?
         get() {
             if (!hasTargets || !isInRange || closestTarget == null || allTargets == null) return null
             if (maxDecisionMargin < closestTarget!!.decisionMargin) return null
 
-            val bestPose = HaPose2d(
-                HaTranslation2d(
+            val bestPose = HaRobotPoseEstimation(
+                HaPose2d(
+                    HaTranslation2d(
                     closestTarget!!.robotPose.position.x,
                     closestTarget!!.robotPose.position.y
                 ),
-                HaRotation2d.fromRadians(closestTarget!!.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
+                HaRotation2d.fromRadians(closestTarget!!.robotPose.orientation.getYaw(AngleUnit.RADIANS))),
                 RobotPoseStdDevs(0.0, 0.0, 0.0)
             )
 
             for (i in allTargets!!) {
                 bestPose.addPoseEstimate(
-                    HaPose2d(
-                        HaTranslation2d(i!!.robotPose.position.x, i.robotPose.position.y),
-                        HaRotation2d.fromRadians(i.robotPose.orientation.getYaw(AngleUnit.RADIANS)),
+                    HaRobotPoseEstimation(
+                            HaPose2d(HaTranslation2d(i!!.robotPose.position.x, i.robotPose.position.y),
+                        HaRotation2d.fromRadians(i.robotPose.orientation.getYaw(AngleUnit.RADIANS))),
                         //Had to use decision margin, no other info about quality of detections. Im so sorry
                         RobotPoseStdDevs(
                             i.decisionMargin.toDouble(),
