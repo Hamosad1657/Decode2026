@@ -9,6 +9,7 @@ import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.Length
 import com.arcrobotics.ftclib.controller.PIDFController
 import com.hamosad.lib.math.HaPose2d
+import com.hamosad.lib.math.HaRobotPoseEstimation
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.HaTranslation2d
@@ -73,11 +74,11 @@ object MecanumSubsystem: Subsystem() {
     }
 
 
-    private val visionEstimation: HaPose2d
+    private val visionEstimation: HaRobotPoseEstimation
         get() =
-        blobCamera?.estimatedPose ?: HaPose2d(
-            HaTranslation2d(0.0, 0.0),
-            HaRotation2d.fromDegrees(0.0),
+        blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
+            HaPose2d(HaTranslation2d(0.0, 0.0),
+            HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 
