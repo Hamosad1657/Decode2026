@@ -6,7 +6,6 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaIMU
 import com.hamosad.lib.math.AngularVelocity
-
 import com.hamosad.lib.math.Length
 import com.arcrobotics.ftclib.controller.PIDFController
 import com.hamosad.lib.math.HaPose2d
@@ -18,6 +17,7 @@ import com.hamosad.lib.math.Translation3d
 import com.hamosad.lib.math.toPIDFController
 import com.hamosad.lib.vision.AprilTagsStdDevs
 import com.hamosad.lib.vision.HaAprilTagCamera
+import com.hamosad.lib.vision.HaColorCamera
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -38,7 +38,7 @@ object MecanumSubsystem: Subsystem() {
     private var imu: HaIMU? = null
 
     const val USE_VISION = false
-    var aprilTagCamera: HaAprilTagCamera? = null
+    var blobCamera: HaAprilTagCamera? = null
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -57,7 +57,7 @@ object MecanumSubsystem: Subsystem() {
 
         // VISION
         if (USE_VISION) {
-            aprilTagCamera = HaAprilTagCamera(
+            blobCamera = HaAprilTagCamera(
                 hardwareMap!!,
                 "Webcam 1",
                 0,
@@ -73,10 +73,9 @@ object MecanumSubsystem: Subsystem() {
 
     private val visionEstimation: HaPose2d
         get() =
-
-        aprilTagCamera?.estimatedPose ?: HaPose2d(
-            HaTranslation2d(0.0, 0.0),
-            HaRotation2d.fromDegrees(0.0),
+        blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
+            HaPose2d(HaTranslation2d(0.0, 0.0),
+            HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 

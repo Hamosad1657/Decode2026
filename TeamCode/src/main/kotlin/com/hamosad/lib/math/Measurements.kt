@@ -191,7 +191,7 @@ class HaPose2d(val translation2d: HaTranslation2d, val rotation2d: HaRotation2d)
 }
 
 class HaRobotPoseEstimation(var pose: HaPose2d, var robotPoseStdDevs: RobotPoseStdDevs) {
-    fun addPoseEstimate(newPose: HaRobotPoseEstimation) {
+    fun addPoseEstimate(newPose: HaRobotPoseEstimation): HaPose2d {
         val translationXVariance = robotPoseStdDevs.translationX.pow(2)
         val translationYVariance = robotPoseStdDevs.translationY.pow(2)
         val rotationVariance = robotPoseStdDevs.rotation.pow(2)
@@ -209,6 +209,6 @@ class HaRobotPoseEstimation(var pose: HaPose2d, var robotPoseStdDevs: RobotPoseS
         val newTranslationY = pose.translation2d.y + translationYK * (newPose.pose.translation2d.y - pose.translation2d.y)
         val newRotation: HaRotation2d = HaRotation2d.fromRotations(pose.rotation2d.asRotations + rotationK * (newPose.pose.rotation2d.asRotations - pose.rotation2d.asRotations))
 
-        pose = HaPose2d(HaTranslation2d(newTranslationX, newTranslationY), newRotation)
+        return HaPose2d(HaTranslation2d(newTranslationX, newTranslationY), newRotation)
     }
 }
