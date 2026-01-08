@@ -5,6 +5,7 @@ import com.hamosad.lib.math.Length
 import com.hamosad.lib.math.MPS
 import com.hamosad.lib.math.PIDGains
 import com.hamosad.lib.math.HaRotation2d
+import com.hamosad.lib.math.HaTranslation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.Translation3d
 import com.hamosad.lib.vision.AprilTagsStdDevs
@@ -12,16 +13,19 @@ import com.hamosad.lib.vision.RobotPoseStdDevs
 import kotlin.math.PI
 
 object MecanumConstants {
-    val MAX_WHEEL_SPEED: AngularVelocity = AngularVelocity.fromRPM(312.0)
+    const val MAX_CHASSIS_SPEED: MPS = 1.6
     val WHEEL_RADIUS: Length = Length.fromMillimeters(52.0)
-    val CHASSIS_RADIUS: Length = Length.fromMillimeters(52.0)
 
-    val MAX_CHASSIS_SPEED: MPS = MAX_WHEEL_SPEED.asRPS * WHEEL_RADIUS.asMeters * 2 * PI
+    val CHASSIS_DIMENSIONS = HaTranslation2d(16.5, 20.75)
 
-    val MAX_CHASSIS_ANGULAR_VELOCITY: AngularVelocity = AngularVelocity.fromRPS(6.0)
+    val WHEEL_CIRCUMFERENCE: Length = WHEEL_RADIUS * 2 * PI
+
+    val MAX_WHEEL_SPEED: AngularVelocity = AngularVelocity.fromRPS(MAX_CHASSIS_SPEED / WHEEL_CIRCUMFERENCE.asMeters)
+
+    val MAX_CHASSIS_ANGULAR_VELOCITY: AngularVelocity = AngularVelocity.fromRPS(MAX_CHASSIS_SPEED / (CHASSIS_DIMENSIONS.length * 2 * PI))
 
     val wheelGains: PIDGains = PIDGains(
-        p = 5.0,
+        p = 6.0,
         i = 2.0,
         d = 0.0,
         f = 0.0
