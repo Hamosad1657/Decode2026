@@ -9,7 +9,6 @@ import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.Length
 import com.arcrobotics.ftclib.controller.PIDFController
 import com.hamosad.lib.math.HaPose2d
-import com.hamosad.lib.math.HaRobotPoseEstimation
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Rotation3d
 import com.hamosad.lib.math.HaTranslation2d
@@ -23,9 +22,7 @@ import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor
-import org.firstinspires.ftc.vision.opencv.ColorRange
-import org.firstinspires.ftc.vision.opencv.ColorSpace
+import org.firstinspires.ftc.teamcode.subsystems.loader.Pattern
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumKinematics as Kinematics
 
@@ -74,13 +71,32 @@ object MecanumSubsystem: Subsystem() {
     }
 
 
-    private val visionEstimation: HaRobotPoseEstimation
+    private val visionEstimation: HaPose2d
         get() =
         blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
             HaPose2d(HaTranslation2d(0.0, 0.0),
             HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
+
+    val detectedPattern: Pattern get() =
+        if (aprilTagCamera != null) {
+            if (aprilTagCamera!!.isTagDetected(Pattern.PPG.id)) {
+                Pattern.PPG
+            } else if (aprilTagCamera!!.isTagDetected(Pattern.PGP.id)) {
+                Pattern.PGP
+            } else if (aprilTagCamera!!.isTagDetected(Pattern.GPP.id)) {
+                Pattern.GPP
+            } else if (previousPattern != Pattern.UNKNOWN){
+                previousPattern
+            } else {
+                Pattern.UNKNOWN
+            }
+        }
+        else {
+            Pattern.UNKNOWN
+        }
+    val previousPattern get() = detectedPattern
 
     private val currentAngle: HaRotation2d
         get() = imu?.currentYaw ?: HaRotation2d.fromDegrees(0.0)
