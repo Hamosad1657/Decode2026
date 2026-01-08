@@ -2,13 +2,10 @@ package com.hamosad.lib.components.sensors
 
 import com.hamosad.lib.math.Length
 import com.qualcomm.hardware.rev.RevColorSensorV3
-import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor
-import com.qualcomm.robotcore.hardware.NormalizedRGBA
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
-class HaColorSensor(hardwareMap: HardwareMap, name: String) {
+class HaColorSensor(name: String, hardwareMap: HardwareMap) {
     val colorSensor: RevColorSensorV3 = hardwareMap.get(RevColorSensorV3::class.java, name)
 
     init {
@@ -17,18 +14,18 @@ class HaColorSensor(hardwareMap: HardwareMap, name: String) {
     }
 
     val maxValue = 4095.0
-    val red get() = (colorSensor.red()).toDouble() / maxValue * 255
-    val blue get() = (colorSensor.blue()).toDouble() / maxValue * 255
-    val green get() = (colorSensor.green()).toDouble() / maxValue * 255
+    val red get() = (colorSensor.red() / maxValue * 255.0).toInt()
+    val blue get() = (colorSensor.blue() / maxValue * 255.0).toInt()
+    val green get() = (colorSensor.green() / maxValue * 255.0).toInt()
 
-    val color get() = Color(red.toInt(), green.toInt(), blue.toInt())
+    val color get() = Color(red, green, blue)
 
     val distance: Length get() = Length.fromCentimeters(colorSensor.getDistance(DistanceUnit.CM))
 
     fun isInColorRange(color: Color, deviation: Int): Boolean {
-        return red.toInt() in (color.red - deviation)..(color.red + deviation) &&
-                blue.toInt() in (color.blue -deviation)..(color.blue + deviation) &&
-                green.toInt() in (color.green - deviation)..(color.green + deviation)
+        return red in (color.red - deviation)..(color.red + deviation) &&
+                blue in (color.blue -deviation)..(color.blue + deviation) &&
+                green in (color.green - deviation)..(color.green + deviation)
     }
 
     fun enableLed() {
