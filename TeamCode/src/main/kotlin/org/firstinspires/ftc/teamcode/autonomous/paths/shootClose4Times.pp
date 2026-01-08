@@ -159,7 +159,7 @@
         }
       ],
       "color": "#7CBA8D",
-      "name": "Path 9",
+      "name": "Path 8",
       "waitBeforeMs": 0,
       "waitAfterMs": 0,
       "waitBeforeName": "",
@@ -177,7 +177,7 @@
       },
       "controlPoints": [],
       "color": "#C5867D",
-      "name": "Path 10",
+      "name": "Path 9",
       "waitBeforeMs": 0,
       "waitAfterMs": 0,
       "waitBeforeName": "",
@@ -195,7 +195,7 @@
       },
       "controlPoints": [],
       "color": "#9C5B56",
-      "name": "Path 11",
+      "name": "Path 10",
       "waitBeforeMs": 0,
       "waitAfterMs": 0,
       "waitBeforeName": "",
@@ -203,7 +203,7 @@
     },
     {
       "id": "mk1dylc6-ho0isk",
-      "name": "Path 8",
+      "name": "Path 11",
       "endPoint": {
         "x": 23,
         "y": 103,
@@ -268,5 +268,5 @@
     }
   ],
   "version": "1.2.1",
-  "timestamp": "2026-01-05T17:10:42.030Z"
+  "timestamp": "2026-01-08T13:11:26.567Z"
 }
