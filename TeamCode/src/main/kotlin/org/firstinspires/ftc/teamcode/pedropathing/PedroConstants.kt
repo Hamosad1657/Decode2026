@@ -4,11 +4,10 @@ import com.pedropathing.follower.Follower
 import com.pedropathing.follower.FollowerConstants
 import com.pedropathing.ftc.FollowerBuilder
 import com.pedropathing.ftc.drivetrains.MecanumConstants
-import com.pedropathing.ftc.localization.Encoder
-import com.pedropathing.ftc.localization.constants.DriveEncoderConstants
 import com.pedropathing.paths.PathConstraints
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumLocalizer
 
 object PedroConstants {
     // Technical constants
@@ -24,21 +23,23 @@ object PedroConstants {
         leftRearMotorDirection = DcMotorSimple.Direction.REVERSE
     }
 
-    val localizerConstants: DriveEncoderConstants = DriveEncoderConstants().apply {
-        leftFrontMotorName = "FL"
-        rightRearMotorName = "BR"
-        rightFrontMotorName = "FR"
-        leftRearMotorName = "BL"
-        leftFrontEncoderDirection = Encoder.REVERSE
-        rightRearEncoderDirection = Encoder.FORWARD
-        rightFrontEncoderDirection = Encoder.FORWARD
-        leftRearEncoderDirection = Encoder.REVERSE
+//    val localizerConstants: DriveEncoderConstants = DriveEncoderConstants().apply {
+//        leftFrontMotorName = "FL"
+//        rightRearMotorName = "BR"
+//        rightFrontMotorName = "FR"
+//        leftRearMotorName = "BL"
+//        leftFrontEncoderDirection = Encoder.REVERSE
+//        rightRearEncoderDirection = Encoder.FORWARD
+//        rightFrontEncoderDirection = Encoder.FORWARD
+//        leftRearEncoderDirection = Encoder.REVERSE
+//
+//        robot_Length = 13.188
+//        robot_Width = 16.535
+//
+//        forwardTicksToInches = 0.017109 / 1.8
+//    }
 
-        robot_Length = 13.188
-        robot_Width = 16.535
-
-        forwardTicksToInches = 0.017109 / 1.8
-    }
+    val localizer = MecanumLocalizer()
 
     // Following tuning specific constants
     var followerConstants: FollowerConstants = FollowerConstants().apply {
@@ -50,7 +51,7 @@ object PedroConstants {
     @JvmStatic
     fun createFollower(hardwareMap: HardwareMap): Follower {
         return FollowerBuilder(followerConstants, hardwareMap).apply {
-            driveEncoderLocalizer(localizerConstants)
+            setLocalizer(localizer)
             pathConstraints(pathConstraints)
             mecanumDrivetrain(driveConstants)
         }.build()
