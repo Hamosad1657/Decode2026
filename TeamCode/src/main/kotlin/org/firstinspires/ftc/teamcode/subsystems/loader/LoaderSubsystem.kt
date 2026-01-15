@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.loader
 
+import android.provider.SyncStateContract
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaCRServoMotor
@@ -11,6 +12,7 @@ import com.arcrobotics.ftclib.controller.PIDFController
 import com.hamosad.lib.math.HaRotation2d
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.commands.Ball
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.floor
@@ -60,8 +62,15 @@ object LoaderSubsystem: Subsystem() {
         private set
     var ball3Color: BallColor = BallColor.UNKNOWN
         private set
-    // TODO: Add GetClosestBall
-
+    val closestBall: Ball get() {
+        if (rouletteAngle.asDegrees in Constants.BALL_1_AT_SHOOTER.asDegrees..(Constants.BALL_2_AT_SHOOTER.asDegrees - Constants.BALL_1_AT_SHOOTER.asDegrees) / 2
+            || rouletteAngle.asDegrees in Constants.BALL_1_AT_SHOOTER.asDegrees.. 360 - (360-Constants.BALL_3_AT_SHOOTER.asDegrees) / 2)
+            return Ball.BALL_1
+        else if (rouletteAngle.asDegrees in (Constants.BALL_2_AT_SHOOTER.asDegrees - Constants.BALL_1_AT_SHOOTER.asDegrees)/2..Constants.BALL_2_AT_SHOOTER.asDegrees ||
+            rouletteAngle.asDegrees in Constants.BALL_2_AT_SHOOTER.asDegrees..(Constants.BALL_3_AT_SHOOTER.asDegrees - Constants.BALL_2_AT_SHOOTER.asDegrees)/2)
+            return Ball.BALL_2
+        return Ball.BALL_3
+    }
     // Roulette functions
     private var angleSetpoint = HaRotation2d.fromDegrees(0.0)
     fun updateRouletteControl(newSetpoint: HaRotation2d = angleSetpoint) {
