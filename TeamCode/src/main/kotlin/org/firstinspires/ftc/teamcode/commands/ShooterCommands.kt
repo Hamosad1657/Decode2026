@@ -14,7 +14,7 @@ fun ShooterSubsystem.setHoodAngleCommand(angle: HaRotation2d): Command = Shooter
 
 fun ShooterSubsystem.setWheelSpeedCommand(speed: AngularVelocity): Command = ShooterSubsystem.runCommand { updateDesiredVelocity(speed) }
 
-fun ShooterSubsystem.setHoodAngleAndMaintainWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
+fun ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
     setHoodAngleCommand(angle) raceWith setWheelSpeedCommand(speed)
 
 
