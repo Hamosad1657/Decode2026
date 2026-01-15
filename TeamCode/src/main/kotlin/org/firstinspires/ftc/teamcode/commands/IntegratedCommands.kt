@@ -24,8 +24,13 @@ fun shootColoredBall(color: BallColor, angle: HaRotation2d, speed: AngularVeloci
     return ShooterSubsystem.runOnce{ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle, speed)} andThen LoaderSubsystem.shootColorCommand(color).withTimeout(2.0)
 }
 
-fun shootBallsInOrder(pattern: Pattern, angle: HaRotation2d, speed: AngularVelocity): Command {
+fun shootBallsInPattern(pattern: Pattern, angle: HaRotation2d, speed: AngularVelocity): Command {
     return shootColoredBall(pattern.pattern[0], angle, speed) andThen
             shootColoredBall(pattern.pattern[1], angle, speed) andThen
             shootColoredBall(pattern.pattern[2], angle, speed)
+}
+
+fun shootClosestBall(angle: HaRotation2d, speed: AngularVelocity): Command {
+    return ShooterSubsystem.runOnce{ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle, speed)} andThen
+            LoaderSubsystem.positionAndLoadToShooterCommand(closestBall) andThen LoaderSubsystem.loadToShooterCommand()
 }
