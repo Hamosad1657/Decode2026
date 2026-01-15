@@ -57,7 +57,7 @@ fun LoaderSubsystem.positionAndLoadToShooterCommand(ball: Ball): Command =
     (positionBallToShootCommand(ball) until { isAtSetpoint }) andThen
             loadToShooterCommand()
 
-fun LoaderSubsystem.shootColorCommand(color: BallColor): Command =
+fun LoaderSubsystem.positionColorToShooterCommand(color: BallColor): Command =
     if (color == BallColor.UNKNOWN) runOnce {  }
     else if (ball1Color == color) {
         positionAndLoadToShooterCommand(Ball.BALL_1)

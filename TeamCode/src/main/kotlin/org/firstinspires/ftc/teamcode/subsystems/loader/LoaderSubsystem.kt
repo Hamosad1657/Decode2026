@@ -31,6 +31,7 @@ object LoaderSubsystem: Subsystem() {
 
     private var armServo: HaServoMotor? = null
     private var armMotor: HaMotor? = null
+    private var angleSetpoint: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -62,17 +63,47 @@ object LoaderSubsystem: Subsystem() {
         private set
     var ball3Color: BallColor = BallColor.UNKNOWN
         private set
-    val closestBall: Ball get() {
-        if (rouletteAngle.asDegrees in Constants.BALL_1_AT_SHOOTER.asDegrees..(Constants.BALL_2_AT_SHOOTER.asDegrees - Constants.BALL_1_AT_SHOOTER.asDegrees) / 2
-            || rouletteAngle.asDegrees in Constants.BALL_1_AT_SHOOTER.asDegrees.. 360 - (360-Constants.BALL_3_AT_SHOOTER.asDegrees) / 2)
+
+    fun defineClosestBallToAngle(angle: HaRotation2d) {
+
+    }
+
+    val closestBallToShooter: Ball get() {
+        if (absoluteRouletteAngle.asDegrees in 360 - (Constants.BALL_1_AT_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees).. 360.0
+            || absoluteRouletteAngle.asDegrees in Constants.BALL_1_AT_SHOOTER.asDegrees.. Constants.BALL_1_AT_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
             return Ball.BALL_1
-        else if (rouletteAngle.asDegrees in (Constants.BALL_2_AT_SHOOTER.asDegrees - Constants.BALL_1_AT_SHOOTER.asDegrees)/2..Constants.BALL_2_AT_SHOOTER.asDegrees ||
-            rouletteAngle.asDegrees in Constants.BALL_2_AT_SHOOTER.asDegrees..(Constants.BALL_3_AT_SHOOTER.asDegrees - Constants.BALL_2_AT_SHOOTER.asDegrees)/2)
+        else if (absoluteRouletteAngle.asDegrees in Constants.BALL_2_AT_SHOOTER.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees.. Constants.BALL_2_AT_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
             return Ball.BALL_2
         return Ball.BALL_3
     }
+
+    val furthestBallFromShooter: Ball get() {
+        if (absoluteRouletteAngle.asDegrees in 360 - (Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees).. 360.0
+            || absoluteRouletteAngle.asDegrees in Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees.. Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
+            return Ball.BALL_1
+        else if (absoluteRouletteAngle.asDegrees in Constants.BALL_2_FURTHEST_FROM_SHOOTER.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees.. Constants.BALL_2_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
+            return Ball.BALL_2
+        return Ball.BALL_3
+    }
+
+    val middleBallFromShooter: Ball get() {
+        return when (closestBallToIntake) {
+            Ball.BALL_1 -> if (furthestBallFromShooter == Ball.BALL_2) Ball.BALL_3 else Ball.BALL_2
+            Ball.BALL_2 -> if (furthestBallFromShooter == Ball.BALL_1) Ball.BALL_3 else Ball.BALL_1
+            Ball.BALL_3 -> if (furthestBallFromShooter == Ball.BALL_2) Ball.BALL_1 else Ball.BALL_2
+        }
+    }
+
+
+    val closestBallToIntake: Ball get() =
+        if (rouletteAngle.asDegrees in 360 - (Constants.BALL_1_AT_INTAKE.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees).absoluteValue..0.0 || rouletteAngle.asDegrees in 0.0+..Constants.BALL_1_AT_INTAKE.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees) {
+            Ball.BALL_1
+        } else if (rouletteAngle.asDegrees in Constants.BALL_2_AT_INTAKE.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees..Constants.BALL_2_AT_INTAKE.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees) {
+            Ball.BALL_2
+        } else {
+            Ball.BALL_3
+        }
     // Roulette functions
-    private var angleSetpoint = HaRotation2d.fromDegrees(0.0)
     fun updateRouletteControl(newSetpoint: HaRotation2d = angleSetpoint) {
         angleSetpoint = newSetpoint
         var errorRad = angleSetpoint.asRadians - absoluteRouletteAngle.asRadians
