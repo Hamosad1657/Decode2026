@@ -2,21 +2,30 @@ package org.firstinspires.ftc.teamcode.commands
 
 
 import com.hamosad.lib.commands.Command
-import com.hamosad.lib.commands.runCommand
+import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.commands.andThen
-import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.commands.runOnce
+import com.hamosad.lib.commands.until
+import com.hamosad.lib.commands.withTimeout
 import com.hamosad.lib.math.HaRotation2d
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem.stopIntake
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallColor
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.loader.Pattern
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 fun collectCommand(): Command {
-    return LoaderSubsystem.runOnce{LoaderSubsystem.positionBallToIntakeCommand(closestBall)} andThen IntakeSubsystem.runIntakeCommand()
+    return LoaderSubsystem.runOnce{LoaderSubsystem.positionBallToIntakeCommand(closestBall)} andThen
+            IntakeSubsystem.runIntakeCommand()
 } //ALON HOMO veloh hechin command
 
-fun shootColoredBall(color: BallColor, angle: HaRotation2d): Command {
-    return ShooterSubsystem.setHoodAngleCommand(angle) andThen LoaderSubsystem.shootColorCommand(color)
+fun shootColoredBall(color: BallColor, angle: HaRotation2d, speed: AngularVelocity): Command {
+    return ShooterSubsystem.runOnce{ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle, speed)} andThen LoaderSubsystem.shootColorCommand(color).withTimeout(2.0)
+}
+
+fun shootBallsInOrder(pattern: Pattern, angle: HaRotation2d, speed: AngularVelocity): Command {
+    return shootColoredBall(pattern.pattern[0], angle, speed) andThen
+            shootColoredBall(pattern.pattern[1], angle, speed) andThen
+            shootColoredBall(pattern.pattern[2], angle, speed)
 }
