@@ -29,6 +29,9 @@ object ShooterSubsystem: Subsystem() {
         ShooterConstants.HOOD_ANGLE_GAINS.d,
         ShooterConstants.HOOD_ANGLE_GAINS.f)
 
+    var desiredVelocity: AngularVelocity = AngularVelocity.fromRPM(0.0)
+
+
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
         rightMotor = HaMotor(ShooterConstants.RIGHT_MOTOR_NAME, hardwareMap!!, MotorType.GO_BUILDA5202)
@@ -48,7 +51,11 @@ object ShooterSubsystem: Subsystem() {
     val currentShooterVelocity: AngularVelocity get() = rightMotor?.currentVelocity?.times(
         ShooterConstants.SPEED_TRANSMISSION_RATIO) ?: AngularVelocity.fromRPM(0.0)
 
-    fun updateShooterVelocityControl(desiredVelocity: AngularVelocity) {
+    fun updateDesiredVelocity(newDesiredVelocity: AngularVelocity) {
+        desiredVelocity = newDesiredVelocity
+    }
+
+    fun updateShooterVelocityControl() {
         rightMotor?.setVoltage(speedPIDController.calculate(currentShooterVelocity.asRPS, desiredVelocity.asRPS / ShooterConstants.SPEED_TRANSMISSION_RATIO))
         leftMotor?.setVoltage(speedPIDController.calculate(currentShooterVelocity.asRPS, desiredVelocity.asRPS / ShooterConstants.SPEED_TRANSMISSION_RATIO))
     }
