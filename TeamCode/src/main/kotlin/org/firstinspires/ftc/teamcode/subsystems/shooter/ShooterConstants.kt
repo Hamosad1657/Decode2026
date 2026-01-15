@@ -37,6 +37,8 @@ object ShooterConstants {
     val MIN_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     const val CURRENT_THRESHOLD: Amps = 0.0
+    val VELOCITY_TOLERANCE: AngularVelocity = AngularVelocity.fromRPM(0.0)
+    val ANGLE_TOLERANCE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     // KINEMATICS
     val DISTANCE_TO_ANGLE_TABLE: Map<Length, HaRotation2d> = mapOf(
