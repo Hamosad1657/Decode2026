@@ -14,12 +14,23 @@ import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 fun ShooterSubsystem.maintainHoodAngleCommand(angle: HaRotation2d): Command = ShooterSubsystem.runCommand { updateHoodAngleControl(angle) }
 
+fun ShooterSubsystem.maintainHoodAngleCommand(angle: () -> HaRotation2d): Command = ShooterSubsystem.runCommand { updateHoodAngleControl(angle()) }
+
 fun ShooterSubsystem.maintainWheelSpeedCommand(speed: AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed) }
+
+fun ShooterSubsystem.maintainWheelSpeedCommand(speed: () -> AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed()) }
+
 
 fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
     runCommand {
         updateHoodAngleControl(angle)
         updateShooterVelocityControl(speed)
+    }
+
+fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle: () -> HaRotation2d, speed: () -> AngularVelocity) =
+    runCommand {
+        updateHoodAngleControl(angle())
+        updateShooterVelocityControl(speed())
     }
 
 // TESTING
