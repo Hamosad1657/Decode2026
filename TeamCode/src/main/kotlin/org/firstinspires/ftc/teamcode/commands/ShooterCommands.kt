@@ -12,13 +12,16 @@ import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
-fun ShooterSubsystem.setHoodAngleCommand(angle: HaRotation2d): Command = ShooterSubsystem.runOnce { setDesiredHoodAngle(angle) } until { isWithinAngleTolerance }
+fun ShooterSubsystem.maintainHoodAngleCommand(angle: HaRotation2d): Command = ShooterSubsystem.runCommand { updateHoodAngleControl(angle) }
 
+fun ShooterSubsystem.maintainWheelSpeedCommand(speed: AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed) }
 
-fun ShooterSubsystem.setWheelSpeedCommand(speed: AngularVelocity): Command = ShooterSubsystem.runCommand { setDesiredVelocity(speed) } until {isWithinVelocityTolerance}
+fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
+    runCommand {
+        updateHoodAngleControl(angle)
+        updateShooterVelocityControl(speed)
+    }
 
-fun ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
-    setHoodAngleCommand(angle) meanwhile setWheelSpeedCommand(speed)
-
+// TESTING
 
 fun ShooterSubsystem.setWheelMotorsVoltageCommand(voltage: Volts) = ShooterSubsystem.runCommand { setWheelMotorsVoltage(voltage) }
