@@ -33,17 +33,20 @@ object LoaderConstants {
     val BALL_1_AT_INTAKE = BALL_1_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
     val BALL_1_AT_COLOR_SENSOR = BALL_1_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
     val BALL_1_FURTHEST_FROM_SHOOTER = BALL_1_AT_SHOOTER + HaRotation2d.fromDegrees(180.0)
+    val BALL_1_FURTHEST_FROM_INTAKE = BALL_1_AT_INTAKE + HaRotation2d.fromDegrees(180.0)
 
     val BALL_2_AT_SHOOTER = HaRotation2d.fromDegrees(120.0)
     val BALL_2_AT_INTAKE = BALL_2_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
     val BALL_2_AT_COLOR_SENSOR = BALL_2_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
     val BALL_2_FURTHEST_FROM_SHOOTER = BALL_2_AT_SHOOTER + HaRotation2d.fromDegrees(180.0)
+    val BALL_2_FURTHEST_FROM_INTAKE = BALL_2_AT_INTAKE + HaRotation2d.fromDegrees(180.0)
 
 
     val BALL_3_AT_SHOOTER = HaRotation2d.fromDegrees(240.0)
     val BALL_3_AT_INTAKE = BALL_3_AT_SHOOTER + HaRotation2d.fromDegrees(90.0)
     val BALL_3_AT_COLOR_SENSOR = BALL_3_AT_SHOOTER - HaRotation2d.fromDegrees(45.0)
     val BALL_3_FURTHEST_FROM_SHOOTER = BALL_3_AT_SHOOTER + HaRotation2d.fromDegrees(180.0)
+    val BALL_3_FURTHEST_FROM_INTAKE = BALL_3_AT_INTAKE + HaRotation2d.fromDegrees(180.0)
 
     val BALL_LOCATION_TOLERANCE = HaRotation2d.fromDegrees(60.0)
 
