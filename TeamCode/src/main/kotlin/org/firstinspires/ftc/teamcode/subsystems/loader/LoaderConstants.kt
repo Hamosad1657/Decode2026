@@ -70,9 +70,10 @@ enum class BallColor {
     UNKNOWN,
 }
 // Hi
-enum class Pattern(val pattern: Array<BallColor>, val id: Int) {
+enum class ColorPattern(val pattern: Array<BallColor>, val id: Int) {
     PPG(arrayOf(BallColor.PURPLE, BallColor.PURPLE, BallColor.GREEN), 23),
     PGP(arrayOf(BallColor.PURPLE, BallColor.GREEN, BallColor.PURPLE), 22),
     GPP(arrayOf(BallColor.GREEN, BallColor.PURPLE, BallColor.PURPLE), 21),
     UNKNOWN(arrayOf(BallColor.UNKNOWN, BallColor.UNKNOWN, BallColor.UNKNOWN), 0),
 }
+class BallPattern(vararg pattern: BallColor)
