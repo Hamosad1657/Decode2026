@@ -51,6 +51,7 @@ fun LoaderSubsystem.positionBallToShooterCommand(ball: Ball): Command = holdRoul
 )
 
 fun LoaderSubsystem.loadToShooterCommand(): Command = runCommand {
+    updateRouletteControl()
     loadToShooter()
 } finallyDo { stopLoadingToShooter() }
 
