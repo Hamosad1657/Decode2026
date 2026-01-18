@@ -6,6 +6,7 @@ import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Servo
+import org.firstinspires.ftc.teamcode.commands.Ball
 
 object LoaderConstants {
     // NAMES
@@ -76,4 +77,6 @@ enum class ColorPattern(val pattern: Array<BallColor>, val id: Int) {
     GPP(arrayOf(BallColor.GREEN, BallColor.PURPLE, BallColor.PURPLE), 21),
     UNKNOWN(arrayOf(BallColor.UNKNOWN, BallColor.UNKNOWN, BallColor.UNKNOWN), 0),
 }
-class BallPattern(vararg pattern: BallColor)
+class BallPattern(private val firstBall: Ball, private val secondBall: Ball, private val thirdBall: Ball) {
+    val pattern: Array<Ball> = arrayOf(firstBall, secondBall, thirdBall)
+}
