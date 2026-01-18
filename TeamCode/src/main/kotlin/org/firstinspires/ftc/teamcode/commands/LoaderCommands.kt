@@ -8,6 +8,7 @@ import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.commands.runOnce
 import com.hamosad.lib.commands.until
 import com.hamosad.lib.math.HaRotation2d
+import com.hamosad.lib.math.Volts
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallColor
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 
@@ -53,21 +54,33 @@ fun LoaderSubsystem.loadToShooterCommand(): Command = runCommand {
     loadToShooter()
 } finallyDo { stopLoadingToShooter() }
 
-fun LoaderSubsystem.positionAndLoadToShooterCommand(ball: Ball): Command =
-    (positionBallToShootCommand(ball) until { isAtSetpoint }) andThen
-            loadToShooterCommand()
+fun LoaderSubsystem.positionAndLoadToShooterCommand(ball: Ball): Command {
+    return (positionBallToShootCommand(ball) until { isAtSetpoint }) andThen
+            loadToShooterCommand() finallyDo {
+                when (returnBallColor(ball)) {
+                ball1Color -> ball1Color = BallColor.UNKNOWN
+                ball2Color -> ball2Color = BallColor.UNKNOWN
+                ball3Color -> ball3Color = BallColor.UNKNOWN
+                else -> {}
+            } }
+}
 
-fun LoaderSubsystem.shootColorCommand(color: BallColor): Command =
+
+fun LoaderSubsystem.positionAndLoadColorToShooterCommand(color: BallColor): Command =
     if (color == BallColor.UNKNOWN) runOnce {  }
-    else if (ball1Color == color) {
+    else if (returnBallColor(closestBallToShooter) == color) {
         positionAndLoadToShooterCommand(Ball.BALL_1)
-    } else if (ball2Color == color) {
+    } else if (returnBallColor(middleBallFromShooter) == color) {
         positionAndLoadToShooterCommand(Ball.BALL_2)
-    } else if (ball3Color == color) {
+    } else if (returnBallColor(furthestBallFromShooter) == color) {
         positionAndLoadToShooterCommand((Ball.BALL_3))
     } else {
         runOnce {  }
     }
+//SPINNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+fun LoaderSubsystem.setServoVoltageCommand(volt: Volts): Command = runCommand {
+    setServoVoltage(volt)
+}
 
 // INTAKING
 fun LoaderSubsystem.positionBallToIntakeCommand(ball: Ball): Command =
