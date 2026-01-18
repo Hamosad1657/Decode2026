@@ -50,6 +50,7 @@ object ShooterSubsystem: Subsystem() {
     val isCurrentAboveThreshold: Boolean get() = rightMotor?.isCurrentOver(ShooterConstants.CURRENT_THRESHOLD) ?: false
     val isWithinVelocityTolerance: Boolean get() = currentMotorVelocity.asRPS in (desiredVelocity.asRPS - ShooterConstants.VELOCITY_TOLERANCE.asRPS)..(desiredVelocity.asRPS + ShooterConstants.VELOCITY_TOLERANCE.asRPS)
     val isWithinAngleTolerance: Boolean get() = currentHoodAngle.asDegrees in (currentHoodAngle.asDegrees - ShooterConstants.ANGLE_TOLERANCE.asDegrees)..(currentHoodAngle.asDegrees + ShooterConstants.ANGLE_TOLERANCE.asDegrees)
+    val isWithinTolerance: Boolean get() = isWithinVelocityTolerance && isWithinAngleTolerance
 
     val currentShooterVelocity: AngularVelocity get() = rightMotor?.currentVelocity?.times(
         ShooterConstants.SPEED_TRANSMISSION_RATIO) ?: AngularVelocity.fromRPM(0.0)
