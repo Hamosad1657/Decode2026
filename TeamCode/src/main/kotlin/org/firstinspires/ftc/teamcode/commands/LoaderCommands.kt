@@ -56,15 +56,20 @@ fun LoaderSubsystem.loadToShooterCommand(): Command = runCommand {
 } finallyDo { stopLoadingToShooter() }
 
 fun LoaderSubsystem.positionColorToShooterCommand(color: BallColor): Command =
-    if (color == BallColor.UNKNOWN) runOnce {  }
-    else if (returnBallColor(closestBallToShooter) == color) {
-        positionBallToShooterCommand(Ball.BALL_1)
-    } else if (returnBallColor(middleBallFromShooter) == color) {
-        positionBallToShooterCommand(Ball.BALL_2)
-    } else if (returnBallColor(furthestBallFromShooter) == color) {
-        positionBallToShooterCommand(Ball.BALL_3)
-    } else {
-        runOnce {  }
+    when (color) {
+        BallColor.UNKNOWN -> runOnce { }
+        returnBallColor(closestBallToShooter) -> {
+            positionBallToShooterCommand(Ball.BALL_1)
+        }
+        returnBallColor(middleBallFromShooter) -> {
+            positionBallToShooterCommand(Ball.BALL_2)
+        }
+        returnBallColor(furthestBallFromShooter) -> {
+            positionBallToShooterCommand(Ball.BALL_3)
+        }
+        else -> {
+            runOnce { }
+        }
     }
 
 // SPIN
