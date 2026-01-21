@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.commands
 
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds
+import com.arcrobotics.ftclib.purepursuit.Path
 import com.hamosad.lib.commands.Command
 import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.math.AngularVelocity
-import com.hamosad.lib.math.HaTranslation2d
-import com.pedropathing.paths.Path
-import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
 
@@ -22,6 +19,11 @@ fun MecanumSubsystem.angularVelocityDriveCommand(
         -leftJoyX() * Constants.MAX_CHASSIS_SPEED,
         -AngularVelocity.fromRPS(rightJoyX() * Constants.MAX_CHASSIS_ANGULAR_VELOCITY.asRPS).asRadPS,
     ))
+}
+
+fun MecanumSubsystem.purePursuitFollowPath(path: Path): Command = MecanumSubsystem.runCommand {
+    val chassisSpeeds = path.loop(robotPose.translation2d.x, robotPose.translation2d.y, robotPose.rotation2d.asDegrees)
+    drive(false, ChassisSpeeds(chassisSpeeds[1], chassisSpeeds[2], chassisSpeeds[3]))
 }
 
 //fun MecanumSubsystem.testMotorsCommand(motor: Int): Command = MecanumSubsystem.runCommand {
