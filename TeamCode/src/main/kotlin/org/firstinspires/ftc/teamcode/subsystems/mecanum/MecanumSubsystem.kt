@@ -244,7 +244,7 @@ object MecanumSubsystem: Subsystem() {
         }
 
         dashboardPacket.fieldOverlay().apply {
-            fillText("Amit: I LOVE MEN!!!", 24.0, 20.0, "8px Arial", 0.0)
+            fillText("Alon: I LOVE MEN!!!", 24.0, 20.0, "32px Arial", 0.0)
             fillRect(translation.x, translation.y, 20.0, 20.0)
         }
     }
