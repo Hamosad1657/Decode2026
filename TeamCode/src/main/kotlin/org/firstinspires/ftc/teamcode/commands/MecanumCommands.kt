@@ -23,7 +23,7 @@ fun MecanumSubsystem.angularVelocityDriveCommand(
 
 fun MecanumSubsystem.purePursuitFollowPath(path: Path): Command = MecanumSubsystem.runCommand {
     val chassisSpeeds = path.loop(robotPose.translation2d.x, robotPose.translation2d.y, robotPose.rotation2d.asDegrees)
-    drive(false, ChassisSpeeds(chassisSpeeds[1], chassisSpeeds[2], chassisSpeeds[3]))
+    drive(true, ChassisSpeeds(chassisSpeeds[1], chassisSpeeds[2], chassisSpeeds[3]))
 }
 
 //fun MecanumSubsystem.testMotorsCommand(motor: Int): Command = MecanumSubsystem.runCommand {
