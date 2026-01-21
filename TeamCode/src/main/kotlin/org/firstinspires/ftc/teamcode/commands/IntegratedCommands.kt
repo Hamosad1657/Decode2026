@@ -15,11 +15,12 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem.stopIntake
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallColor
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallPattern
+import org.firstinspires.ftc.teamcode.subsystems.loader.ColorPattern
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.loader.Pattern
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
-// It's quite shrimple
+// -- INTAKE --
+
 fun collectSimpleCommand(slotTimeout: Seconds): Command =
     IntakeSubsystem.runIntakeCommand() meanwhile (
             (LoaderSubsystem.positionBallToIntakeCommand(Ball.BALL_1) withTimeout(slotTimeout)) andThen
@@ -34,44 +35,132 @@ fun collectAdvancedCommand(slotTimeout: Seconds): Command =
                     (LoaderSubsystem.positionBallToIntakeCommand(LoaderSubsystem.furthestBallFromIntake) withTimeout(slotTimeout))
             )
 
-// TODO: Add a command that shoots all 3 balls in a specific pattern, no matter what
-// TODO: Add a command that shoots all known balls in a color pattern. Have it re-check the current ball colors constantly, instead of once at the start
-// TODO: Fix the closest ball command, you know what's wrong in it. And remember it needs to shoot the closest known ball, and if there is no such ball, do nothing
 // TODO: Add a command that uses the dynamic shooting to... well... shoot dynamically (april tags and shit)
 
-fun shootBallCommand(ball: Ball, angle: HaRotation2d, speed: AngularVelocity): Command =
+// -- NON COLOR DEPENDANT SHOOTING --
+
+fun shootBallCommand(ball: Ball, angle: HaRotation2d, speed: AngularVelocity, shootingTimeout: Seconds): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
             (LoaderSubsystem.positionBallToShooterCommand(ball) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                    (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0))
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
             )
     )
 
-fun shootBallCommand(ball: Ball, angle: () -> HaRotation2d, speed: () -> AngularVelocity): Command =
+fun shootBallCommand(ball: Ball, angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
             (LoaderSubsystem.positionBallToShooterCommand(ball) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                    (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0))
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
             )
     )
 
-fun shootAllBallsInPatternCommand(pattern: BallPattern, angle: () -> HaRotation2d, speed: () -> AngularVelocity): Command =
+fun shootClosestBallCommand(angle: HaRotation2d, speed: AngularVelocity, shootingTimeout: Seconds): Command =
+    (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
+            )
+            )
+
+fun shootClosestBallCommand(angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command =
+    (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
+            )
+            )
+
+fun shootAllBallsInPatternCommand(pattern: BallPattern, angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
             ((LoaderSubsystem.positionBallToShooterCommand(pattern.pattern[0]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                    (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0)))
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout)))
                     andThen ((LoaderSubsystem.positionBallToShooterCommand(pattern.pattern[1]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                    (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0))) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))) andThen
                     ((LoaderSubsystem.positionBallToShooterCommand(pattern.pattern[2]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                            (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0)))
+                            (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout)))
             )
     )
 
-fun shootColoredBallCommand(color: BallColor, angle: HaRotation2d, speed: AngularVelocity): Command =
-    (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
-            (LoaderSubsystem.positionColorToShooterCommand(color) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
-                    (LoaderSubsystem.loadToShooterCommand() withTimeout(3.0))
-            )
-            )
+// COLOR DEPENDANT SHOOTING
 
-//fun shootClosestBall(angle: HaRotation2d, speed: AngularVelocity): Command {
-//    return ShooterSubsystem.runOnce{ShooterSubsystem.setHoodAngleAndWheelSpeedCommand(angle, speed)} andThen
-//            LoaderSubsystem.positionAndLoadToShooterCommand(closestBall) andThen LoaderSubsystem.loadToShooterCommand()
-//}
+fun shootClosestKnownBallCommand(angle: HaRotation2d, speed: AngularVelocity, shootingTimeout: Seconds): Command {
+    var closestKnownBall: Ball = Ball.BALL_1
+    var hasKnownBall = false
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.furthestBallFromShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.furthestBallFromShooter
+        hasKnownBall = true
+    }
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.middleBallFromShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.middleBallFromShooter
+        hasKnownBall = true
+    }
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.closestBallToShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.closestBallToShooter
+        hasKnownBall = true
+    }
+    if (!hasKnownBall) return LoaderSubsystem.runOnce {}
+
+    return (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionBallToShooterCommand(closestKnownBall) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
+            )
+            )
+}
+
+fun shootClosestKnownBallCommand(angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command {
+    var closestKnownBall: Ball = Ball.BALL_1
+    var hasKnownBall = false
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.furthestBallFromShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.furthestBallFromShooter
+        hasKnownBall = true
+    }
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.middleBallFromShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.middleBallFromShooter
+        hasKnownBall = true
+    }
+    if (LoaderSubsystem.returnBallColor(LoaderSubsystem.closestBallToShooter) != BallColor.UNKNOWN) {
+        closestKnownBall = LoaderSubsystem.closestBallToShooter
+        hasKnownBall = true
+    }
+    if (!hasKnownBall) return LoaderSubsystem.runOnce {}
+
+    return (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionBallToShooterCommand(closestKnownBall) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))
+            )
+            )
+}
+
+fun shootColoredBallCommand(color: BallColor, angle: HaRotation2d, speed: AngularVelocity, shootingTimeout: Seconds): Command {
+    if (LoaderSubsystem.returnBallColor(Ball.BALL_1) != color && LoaderSubsystem.returnBallColor(Ball.BALL_2) != color &&
+        LoaderSubsystem.returnBallColor(Ball.BALL_3) != color) {
+        return LoaderSubsystem.runOnce {}
+    }
+
+    return (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionColorToShooterCommand(color) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout (shootingTimeout))
+            )
+            )
+}
+
+fun shootColoredBallCommand(color: BallColor, angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command {
+    if (LoaderSubsystem.returnBallColor(Ball.BALL_1) != color && LoaderSubsystem.returnBallColor(Ball.BALL_2) != color &&
+        LoaderSubsystem.returnBallColor(Ball.BALL_3) != color) {
+        return LoaderSubsystem.runOnce {}
+    }
+
+    return (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            (LoaderSubsystem.positionColorToShooterCommand(color) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout (shootingTimeout))
+            )
+            )
+}
+
+fun shootAllBallsInColorPatternCommand(colorPattern: ColorPattern, angle: () -> HaRotation2d, speed: () -> AngularVelocity, shootingTimeout: Seconds): Command =
+    (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle, speed) raceWith (
+            ((LoaderSubsystem.positionColorToShooterCommand(colorPattern.pattern[0]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout)))
+                    andThen ((LoaderSubsystem.positionColorToShooterCommand(colorPattern.pattern[1]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                    (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout))) andThen
+                    ((LoaderSubsystem.positionColorToShooterCommand(colorPattern.pattern[2]) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+                            (LoaderSubsystem.loadToShooterCommand() withTimeout(shootingTimeout)))
+            )
+            )
