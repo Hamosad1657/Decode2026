@@ -14,6 +14,7 @@ import com.hamosad.lib.math.Volts
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.commands.Ball
+import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.floor
@@ -53,6 +54,13 @@ object LoaderSubsystem: Subsystem() {
             val currentPosition = rouletteAngle
             return HaRotation2d.fromDegrees(currentPosition.asDegrees - floor(currentPosition.asDegrees / 360) * 360)
         }
+
+    val currentPattern: ColorPattern get() =
+        if (MecanumSubsystem.apriltagCamera?.isTagDetected(ColorPattern.GPP.id) == true) ColorPattern.GPP
+        else if (MecanumSubsystem.apriltagCamera?.isTagDetected(ColorPattern.PGP.id) == true) ColorPattern.PGP
+        else ColorPattern.PPG
+
+
 
     val isAtSetpoint: Boolean
         get() = (absoluteRouletteAngle.asDegrees in (
