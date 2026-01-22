@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems.mecanum
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.arcrobotics.ftclib.controller.PIDFController
+import com.arcrobotics.ftclib.geometry.Pose2d
+import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.arcrobotics.ftclib.geometry.Translation2d
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaMotor
@@ -25,15 +28,20 @@ import kotlin.math.absoluteValue
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 
 object MecanumSubsystem: Subsystem() {
+    // -- Components --
+
     // FL, BR, FR, BL
     private var motors: List<HaMotor> = listOf()
     private val controllers: List<PIDFController> = listOf(
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
     )
     private var imu: HaIMU? = null
+    var apriltagCamera: HaAprilTagCamera? = null
+
+    // -- Fields --
 
     private val kinematics = MecanumDriveKinematics(
         Translation2d(Constants.CHASSIS_DIMENSIONS.x, Constants.CHASSIS_DIMENSIONS.y),
@@ -42,8 +50,15 @@ object MecanumSubsystem: Subsystem() {
         Translation2d(-Constants.CHASSIS_DIMENSIONS.x, -Constants.CHASSIS_DIMENSIONS.y),
     )
 
+    private val odometry = MecanumDriveOdometry(
+        kinematics, Rotation2d(0.0)
+    )
+
     const val USE_VISION = false
-    var blobCamera: HaAprilTagCamera? = null
+
+    val yawPIDController = Constants.YAW_PID_GAINS.toPIDFController()
+
+    // -- Init --
 
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
@@ -62,7 +77,7 @@ object MecanumSubsystem: Subsystem() {
 
         // VISION
         if (USE_VISION) {
-            blobCamera = HaAprilTagCamera(
+            apriltagCamera = HaAprilTagCamera(
                 hardwareMap!!,
                 "Webcam 1",
                 0,
@@ -75,15 +90,16 @@ object MecanumSubsystem: Subsystem() {
         }
     }
 
+    // -- Property getters --
 
-    private val visionEstimation: HaRobotPoseEstimation get() =
-        blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
+    private val visionEstimation: HaRobotPoseEstimation =
+        apriltagCamera?.estimatedPose ?: HaRobotPoseEstimation(
             HaPose2d(HaTranslation2d(0.0, 0.0),
             HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
         )
 
-    private val odometryEstimation: HaRobotPoseEstimation get() =
+    private val odometryEstimation: HaRobotPoseEstimation =
         HaRobotPoseEstimation(
         HaPose2d(
             HaTranslation2d(0.0, 0.0),
@@ -100,31 +116,64 @@ object MecanumSubsystem: Subsystem() {
     val currentAbsoluteAngle: HaRotation2d
         get() = imu?.currentYaw ?: HaRotation2d.fromDegrees(0.0)
 
+    val currentSpeeds: MecanumDriveWheelSpeeds
+        get() = MecanumDriveWheelSpeeds(
+            motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters,
+            motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters,
+            motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters,
+            motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters,
+        )
+
+    val currentVelocity: ChassisSpeeds
+        get() = kinematics.toChassisSpeeds(currentSpeeds)
+
     var currentAngle: HaRotation2d = HaRotation2d.fromDegrees(0.0)
         private set
+
+    // -- Low level functions --
+
     private var rotations = 0
+    private var isFirstLoop = true
     fun updateAngle() {
         var newAngle = currentAbsoluteAngle
         if (newAngle.asDegrees < 0.0) newAngle = HaRotation2d.fromDegrees(360.0 + newAngle.asDegrees)
 
-        if (((currentAngle.asDegrees - (rotations * 360.0)) - newAngle.asDegrees).absoluteValue > 45.0) {
+        if (((currentAngle.asDegrees - (rotations * 360.0)) - newAngle.asDegrees).absoluteValue > 180.0 && !isFirstLoop) {
             if (currentAngle.asDegrees - (rotations * 360.0) > 180.0) {
                 rotations++
             } else {
                 rotations--
             }
         }
-        currentAngle = HaRotation2d.fromDegrees(newAngle.asDegrees * rotations)
+        currentAngle = HaRotation2d.fromDegrees(newAngle.asDegrees + 360.0 * rotations)
+        isFirstLoop = false
     }
 
-    // Low level functions
+    var currentTime = System.currentTimeMillis() / 1000.0
+    fun updateOdometry() {
+        currentTime = System.currentTimeMillis() / 1000.0
+        val newPose = odometry.updateWithTime(currentTime, currentAbsoluteAngle.toFTCLibR2d(), currentSpeeds)
+        odometryEstimation.pose = HaPose2d(
+            HaTranslation2d(newPose.x, newPose.y), HaRotation2d.fromDegrees(newPose.rotation.degrees)
+        )
+    }
+
+    fun resetPose(newPose: Pose2d) {
+        odometry.resetPosition(newPose, currentAbsoluteAngle.toFTCLibR2d())
+        odometryEstimation.pose = HaPose2d(
+            HaTranslation2d(newPose.x, newPose.y), HaRotation2d.fromDegrees(newPose.rotation.degrees)
+        )
+    }
     fun resetGyro() {
+        odometry.resetPosition(odometry.poseMeters, currentAbsoluteAngle.toFTCLibR2d())
+
         imu?.resetYaw()
         currentAngle = HaRotation2d.fromDegrees(0.0)
         rotations = 0
     }
 
-    // Low level motor PID
+
+    // -- Motor and components control --
     private var wheelVelocitySetpoints: MecanumDriveWheelSpeeds = MecanumDriveWheelSpeeds()
 
     /** Called in loops to control PID of motors. */
@@ -168,13 +217,16 @@ object MecanumSubsystem: Subsystem() {
         }
     }
 
-    // Periodic
+    // -- Periodic --
     override fun periodic() {
-
+        updateAngle()
+        updateOdometry()
     }
 
-    // Telemetry
+    // -- Telemetry --
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
+        val translation = robotPose.translation2d
+
         // FL, BR, FR, BL
         if (wheelVelocitySetpoints.frontLeftMetersPerSecond != 0.0) {
             dashboardPacket.put("FL Speed setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
@@ -186,6 +238,11 @@ object MecanumSubsystem: Subsystem() {
             dashboardPacket.put("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
             dashboardPacket.put("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
             dashboardPacket.put("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+
+            dashboardPacket.put("Odometry X", translation.x)
+            dashboardPacket.put("Odometry Y", translation.y)
+
+            dashboardPacket.put("Non absolute angle deg", currentAngle.asDegrees)
         }
     }
 }

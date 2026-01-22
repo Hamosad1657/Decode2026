@@ -24,14 +24,29 @@ object MecanumConstants {
 
     val MAX_CHASSIS_ANGULAR_VELOCITY: AngularVelocity = AngularVelocity.fromRPS(MAX_CHASSIS_SPEED / (CHASSIS_DIMENSIONS.length * 2 * PI))
 
-    val wheelGains: PIDGains = PIDGains(
+    val WHEEL_GAINS: PIDGains = PIDGains(
         p = 6.0,
         i = 2.0,
         d = 0.0,
-        f = 0.0
+        f = 0.0,
     )
 
-    //Vision
+    val INVERT_YAW_FOLLOWING = false
+    // Uses radians
+    val YAW_PID_GAINS: PIDGains = PIDGains(
+        p = 0.0,
+        i = 0.0,
+        d = 0.0,
+        f = 0.0,
+    )
+
+    // -- Pure pursuit --
+    val FOLLOW_RADIUS: Length = Length.fromInches(CHASSIS_DIMENSIONS.y + 3)
+    val POSITION_BUFFER: Double = 0.1
+    val ANGLE_BUFFER: Double = 0.1
+
+
+    // -- Vision --
     val MAX_TRUST_RANGE: Length = Length.fromMeters(5.0)
     val CAMERA_POSITION: Translation3d = Translation3d(0.0,0.0,0.5)
     val CAMERA_ROTATION: Rotation3d = Rotation3d(
