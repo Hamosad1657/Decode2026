@@ -10,6 +10,7 @@ import com.hamosad.lib.commands.until
 import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
+import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterState
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 fun ShooterSubsystem.maintainHoodAngleCommand(angle: HaRotation2d): Command = ShooterSubsystem.runCommand { updateHoodAngleControl(angle) }
@@ -21,16 +22,16 @@ fun ShooterSubsystem.maintainWheelSpeedCommand(speed: AngularVelocity): Command 
 fun ShooterSubsystem.maintainWheelSpeedCommand(speed: () -> AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed()) }
 
 
-fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle: HaRotation2d, speed: AngularVelocity) =
+fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState: ShooterState) =
     runCommand {
-        updateHoodAngleControl(angle)
-        updateShooterVelocityControl(speed)
+        updateHoodAngleControl(shooterState.angle)
+        updateShooterVelocityControl(shooterState.speed)
     }
 
-fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(angle: () -> HaRotation2d, speed: () -> AngularVelocity) =
+fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState: () -> ShooterState) =
     runCommand {
-        updateHoodAngleControl(angle())
-        updateShooterVelocityControl(speed())
+        updateHoodAngleControl(shooterState().angle)
+        updateShooterVelocityControl(shooterState().speed)
     }
 
 // TESTING
