@@ -41,8 +41,6 @@ fun collectAdvancedCommand(slotTimeout: Seconds): Command =
                     (LoaderSubsystem.positionBallToIntakeCommand(LoaderSubsystem.furthestBallFromIntake) withTimeout(slotTimeout))
             )
 
-// TODO: Add a command that uses the dynamic shooting to... well... shoot dynamically (april tags and shit)
-
 // -- NON COLOR DEPENDANT SHOOTING --
 
 fun shootBallCommand(ball: Ball, shooterState: ShooterState, shootingTimeout: Seconds): Command =
