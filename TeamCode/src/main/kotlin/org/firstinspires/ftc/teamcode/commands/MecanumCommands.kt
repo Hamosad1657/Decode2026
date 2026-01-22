@@ -21,19 +21,27 @@ fun MecanumSubsystem.angularVelocityDriveCommand(
     ))
 }
 
+fun MecanumSubsystem.aimAtGoalAndMoveWithVision(leftJoyX: () -> Double, leftJoyY: () -> Double): Command = MecanumSubsystem.runCommand {
+    var errorRad: Double? = null
+     if (apriltagCamera?.isTagDetected(20) ?: false || apriltagCamera?.isTagDetected(24) ?: false) {
+        val detections = apriltagCamera!!.allTargets
+         if (detections != null) {
+             for (detection in detections) {
+                 if (detection?.id == 20 || detection?.id == 24) {
+                     errorRad = detection.ftcPose.yaw
+                 }
+             }
+         }
+     }
+    drive(true, ChassisSpeeds(
+        leftJoyY() * Constants.MAX_CHASSIS_SPEED,
+        -leftJoyX() * Constants.MAX_CHASSIS_SPEED,
+        (if (Constants.INVERT_YAW_FOLLOWING) -1 else 1) * (if (errorRad != null) yawPIDController.calculate(errorRad, 0.0) else 0.0)
+        )
+    )
+}
+
 fun MecanumSubsystem.purePursuitFollowPath(path: Path): Command = MecanumSubsystem.runCommand {
     val chassisSpeeds = path.loop(robotPose.translation2d.x, robotPose.translation2d.y, robotPose.rotation2d.asDegrees)
     drive(true, ChassisSpeeds(chassisSpeeds[1], chassisSpeeds[2], chassisSpeeds[3]))
 }
-
-//fun MecanumSubsystem.testMotorsCommand(motor: Int): Command = MecanumSubsystem.runCommand {
-//    testMotors(motor)
-//}
-//
-//fun MecanumSubsystem.testPIDCommand(): Command = MecanumSubsystem.runCommand {
-//    testPID()
-//}
-
-//fun MecanumSubsystem.followPathCommand(path: Path, hardwareMap: HardwareMap): Command {
-//    val follower = PedroConstants.createFollower(hardwareMap)
-//}
