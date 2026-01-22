@@ -8,7 +8,7 @@ import com.hamosad.lib.math.HaRotation2d
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Servo
 
-data class ShooterState(val angle: HaRotation2d, val speed: AngularVelocity)
+data class ShooterState(public val angle: HaRotation2d, public val speed: AngularVelocity)
 
 object ShooterConstants {
     val WHEEL_VELOCITY_GAINS = PIDGains(
