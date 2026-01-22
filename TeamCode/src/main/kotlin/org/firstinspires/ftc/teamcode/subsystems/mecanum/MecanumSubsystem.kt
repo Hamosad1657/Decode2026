@@ -242,10 +242,5 @@ object MecanumSubsystem: Subsystem() {
 
             dashboardPacket.put("Non absolute angle deg", currentAngle.asDegrees)
         }
-
-        dashboardPacket.fieldOverlay().apply {
-            fillText("Alon: I LOVE MEN!!!", 24.0, 20.0, "32px Arial", 0.0)
-            fillRect(translation.x, translation.y, 20.0, 20.0)
-        }
     }
 }
