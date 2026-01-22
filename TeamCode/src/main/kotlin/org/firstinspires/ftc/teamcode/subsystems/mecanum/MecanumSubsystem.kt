@@ -33,13 +33,13 @@ object MecanumSubsystem: Subsystem() {
     // FL, BR, FR, BL
     private var motors: List<HaMotor> = listOf()
     private val controllers: List<PIDFController> = listOf(
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
-        Constants.wheelGains.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
+        Constants.WHEEL_GAINS.toPIDFController(),
     )
     private var imu: HaIMU? = null
-    var blobCamera: HaAprilTagCamera? = null
+    var apriltagCamera: HaAprilTagCamera? = null
 
     // -- Fields --
 
@@ -55,6 +55,8 @@ object MecanumSubsystem: Subsystem() {
     )
 
     const val USE_VISION = false
+
+    val yawPIDController = Constants.YAW_PID_GAINS.toPIDFController()
 
     // -- Init --
 
@@ -75,7 +77,7 @@ object MecanumSubsystem: Subsystem() {
 
         // VISION
         if (USE_VISION) {
-            blobCamera = HaAprilTagCamera(
+            apriltagCamera = HaAprilTagCamera(
                 hardwareMap!!,
                 "Webcam 1",
                 0,
@@ -91,7 +93,7 @@ object MecanumSubsystem: Subsystem() {
     // -- Property getters --
 
     private val visionEstimation: HaRobotPoseEstimation =
-        blobCamera?.estimatedPose ?: HaRobotPoseEstimation(
+        apriltagCamera?.estimatedPose ?: HaRobotPoseEstimation(
             HaPose2d(HaTranslation2d(0.0, 0.0),
             HaRotation2d.fromDegrees(0.0)),
             RobotPoseStdDevs(0.0, 0.0, 0.0)
