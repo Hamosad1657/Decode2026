@@ -32,9 +32,9 @@ object MecanumConstants {
     )
 
     //Pure pursuit
-    val followRadius: Length = Length.fromInches(CHASSIS_DIMENSIONS.y + 3)
-    val positionBuffer: Double = 0.1
-    val angleBuffer: Double = 0.1
+    val FOLLOW_RADIUS: Length = Length.fromInches(CHASSIS_DIMENSIONS.y + 3)
+    val POSITION_BUFFER: Double = 0.1
+    val ANGLE_BUFFER: Double = 0.1
 
 
     //Vision
