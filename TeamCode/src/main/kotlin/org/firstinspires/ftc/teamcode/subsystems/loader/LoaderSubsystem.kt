@@ -189,8 +189,18 @@ object LoaderSubsystem: Subsystem() {
 
     // Telemetry
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
+        telemetry.addData("Current roulette angle deg", rouletteAngle.asDegrees)
+        telemetry.addData("Current absolute roulette angle deg", absoluteRouletteAngle.asDegrees)
+        telemetry.addData("Current angle setpoint deg", angleSetpoint)
+
+        telemetry.addData("Is at setpoint", isAtSetpoint)
+
+
         telemetry.addData("Ball 1 color", ball1Color.name)
         telemetry.addData("Ball 2 color", ball2Color.name)
         telemetry.addData("Ball 3 color", ball3Color.name)
+
+        telemetry.addData("Closest ball to shooter", closestBallToShooter.name)
+        telemetry.addData("Closest ball to intake", closestBallToIntake.name)
     }
 }
