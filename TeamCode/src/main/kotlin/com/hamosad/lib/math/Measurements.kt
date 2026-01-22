@@ -3,8 +3,12 @@ package com.hamosad.lib.math
 import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.arcrobotics.ftclib.geometry.Translation2d
 import com.hamosad.lib.vision.RobotPoseStdDevs
+import com.pedropathing.ftc.FTCCoordinates
 import com.pedropathing.ftc.PoseConverter
 import com.pedropathing.geometry.Pose
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -185,8 +189,10 @@ class Translation3d(val x: Double, val y: Double, val z: Double) {
 }
 
 class HaPose2d(val translation2d: HaTranslation2d, val rotation2d: HaRotation2d) {
-    fun toPedroPose(): Pose{
-        return Pose(translation2d.x, translation2d.y, rotation2d.asDegrees)
+    fun toPedroPose(): Pose {
+        val pose2D =
+            Pose2D(DistanceUnit.METER, translation2d.x, translation2d.y, AngleUnit.RADIANS, rotation2d.asRadians)
+        return PoseConverter.pose2DToPose(pose2D, FTCCoordinates.INSTANCE)
     }
 }
 
