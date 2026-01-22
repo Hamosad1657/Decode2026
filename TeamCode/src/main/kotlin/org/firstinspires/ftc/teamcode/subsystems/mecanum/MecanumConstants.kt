@@ -31,6 +31,12 @@ object MecanumConstants {
         f = 0.0
     )
 
+    //Pure pursuit
+    val followRadius: Length = Length.fromInches(CHASSIS_DIMENSIONS.y + 3)
+    val positionBuffer: Double = 0.1
+    val angleBuffer: Double = 0.1
+
+
     //Vision
     val MAX_TRUST_RANGE: Length = Length.fromMeters(5.0)
     val CAMERA_POSITION: Translation3d = Translation3d(0.0,0.0,0.5)
