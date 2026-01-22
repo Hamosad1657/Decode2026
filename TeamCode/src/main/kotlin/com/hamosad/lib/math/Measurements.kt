@@ -1,5 +1,6 @@
 package com.hamosad.lib.math
 
+import com.arcrobotics.ftclib.geometry.Pose2d
 import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.arcrobotics.ftclib.geometry.Translation2d
 import com.hamosad.lib.vision.RobotPoseStdDevs
@@ -193,6 +194,9 @@ class HaPose2d(val translation2d: HaTranslation2d, val rotation2d: HaRotation2d)
         val pose2D =
             Pose2D(DistanceUnit.METER, translation2d.x, translation2d.y, AngleUnit.RADIANS, rotation2d.asRadians)
         return PoseConverter.pose2DToPose(pose2D, FTCCoordinates.INSTANCE)
+    }
+    fun toFTCLibPose(): Pose2d {
+        return Pose2d(translation2d.toFTCLibT2d(), rotation2d.toFTCLibR2d())
     }
 }
 
