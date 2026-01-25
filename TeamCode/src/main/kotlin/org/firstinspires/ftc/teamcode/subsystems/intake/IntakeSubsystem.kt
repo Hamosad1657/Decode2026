@@ -45,5 +45,6 @@ object IntakeSubsystem: Subsystem() {
     // Telemetry
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
         dashboardPacket.put("Intake velocity RPM", motor?.currentVelocity?.asRPM ?: 0.0)
+        dashboardPacket.put("Is current above threshold", isCurrentOverThreshold)
     }
 }
