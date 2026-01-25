@@ -67,8 +67,11 @@ object LoaderSubsystem: Subsystem() {
                 angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees))
 
     var ball1Color: BallColor = BallColor.UNKNOWN
+        private set
     var ball2Color: BallColor = BallColor.UNKNOWN
+        private set
     var ball3Color: BallColor = BallColor.UNKNOWN
+        private set
 
     fun returnBallColor(ball: Ball): BallColor {
         return when (ball) {
@@ -88,8 +91,7 @@ object LoaderSubsystem: Subsystem() {
     }
 
     val furthestBallFromShooter: Ball get() {
-        if (absoluteRouletteAngle.asDegrees in 360 - (Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees).absoluteValue.. 360.0
-            || absoluteRouletteAngle.asDegrees in Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees.. Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
+        if (absoluteRouletteAngle.asDegrees in Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees.. Constants.BALL_1_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
             return Ball.BALL_1
         else if (absoluteRouletteAngle.asDegrees in Constants.BALL_2_FURTHEST_FROM_SHOOTER.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees.. Constants.BALL_2_FURTHEST_FROM_SHOOTER.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees)
             return Ball.BALL_2
@@ -115,8 +117,7 @@ object LoaderSubsystem: Subsystem() {
             Ball.BALL_3
         }
     val furthestBallFromIntake: Ball get() =
-        if (rouletteAngle.asDegrees in 360 - (Constants.BALL_1_FURTHEST_FROM_INTAKE.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees).absoluteValue..0.0
-            || rouletteAngle.asDegrees in 0.0..Constants.BALL_1_FURTHEST_FROM_INTAKE.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees) {
+        if (rouletteAngle.asDegrees in Constants.BALL_1_FURTHEST_FROM_INTAKE.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees..Constants.BALL_1_FURTHEST_FROM_INTAKE.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees) {
             Ball.BALL_1
         } else if (rouletteAngle.asDegrees in Constants.BALL_2_FURTHEST_FROM_INTAKE.asDegrees - Constants.BALL_LOCATION_TOLERANCE.asDegrees..Constants.BALL_2_FURTHEST_FROM_INTAKE.asDegrees + Constants.BALL_LOCATION_TOLERANCE.asDegrees) {
             Ball.BALL_2

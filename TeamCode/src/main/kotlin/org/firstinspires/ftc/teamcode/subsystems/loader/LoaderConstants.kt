@@ -16,6 +16,8 @@ object LoaderConstants {
     const val ARM_MOTOR_NAME = "Loader arm motor"
 
     // COMPONENT CONFIGS
+
+    // COUNTER CLOCKWISE POSITIVE!
     val ROULETTE_SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
     val ARM_SERVO_DIRECTION = Servo.Direction.FORWARD
     val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.FORWARD
