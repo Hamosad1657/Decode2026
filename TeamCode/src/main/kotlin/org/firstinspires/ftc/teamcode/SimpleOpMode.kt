@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 @TeleOp
-class simpleOpMode: CommandOpModeTeleop() {
+class SimpleOpMode: CommandOpModeTeleop() {
     override var subsystemsToUse: List<Subsystem> = listOf(
         MecanumSubsystem, LoaderSubsystem,
         ShooterSubsystem, IntakeSubsystem
