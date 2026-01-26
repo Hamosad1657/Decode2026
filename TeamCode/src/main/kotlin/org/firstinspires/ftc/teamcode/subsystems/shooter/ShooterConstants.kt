@@ -40,6 +40,10 @@ object ShooterConstants {
     val VELOCITY_TOLERANCE: AngularVelocity = AngularVelocity.fromRPM(0.0)
     val ANGLE_TOLERANCE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
+    // SIMPLE CONSTANTS
+    val SIMPLE_SPEED: AngularVelocity = AngularVelocity.fromRPM(40.0)
+    val SIMPLE_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(30.0)
+
     // KINEMATICS
     val DISTANCE_TO_ANGLE_TABLE: Map<Length, HaRotation2d> = mapOf(
         Pair(Length.fromMeters(0.0), HaRotation2d.fromDegrees(0.0))
