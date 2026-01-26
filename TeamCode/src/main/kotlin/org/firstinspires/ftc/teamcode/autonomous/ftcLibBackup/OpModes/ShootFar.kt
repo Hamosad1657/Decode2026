@@ -19,16 +19,16 @@ import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToSh
 
 
 @Autonomous
-class ShootClose : CommandOpModeAutonomous() {
+class ShootFar : CommandOpModeAutonomous() {
     override var subsystemsToUse: List<Subsystem> = listOf(MecanumSubsystem, ShooterSubsystem, LoaderSubsystem)
-
+    
     override fun configureDefaultCommands() {}
 
     override fun getAutonomousCommand(): Command {
-        return MecanumSubsystem.purePursuitFollowPath(Paths.shootClosePath) andThen
+        return MecanumSubsystem.purePursuitFollowPath(Paths.shootFarPath) andThen
                 shootAllBallsInColorPatternCommand(LoaderSubsystem.currentPattern, {
-            interpolateDistanceToShooterState(Length.fromInches(
-                MecanumSubsystem.apriltagCamera?.closestTarget?.ftcPose?.range ?: 1.0))
-        }, 3.0) andThen MecanumSubsystem.purePursuitFollowPath(Paths.goToCloseEndpointPath)
+                    interpolateDistanceToShooterState(Length.fromInches(
+                        MecanumSubsystem.apriltagCamera?.closestTarget?.ftcPose?.range ?: 1.0))
+                }, 3.0) andThen MecanumSubsystem.purePursuitFollowPath(Paths.goToFarEndpointPath)
     }
 }
