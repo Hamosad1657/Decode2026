@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.testOpModes
+package org.firstinspires.ftc.teamcode.testingOpModes
 
-import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.hamosad.lib.opModes.CommandOpModeTeleop
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 import com.hamosad.lib.commands.Subsystem
