@@ -30,7 +30,6 @@ object LoaderSubsystem: Subsystem() {
     )
 
     private var colorSensor: HaColorSensor? = null
-
     private var armServo: HaServoMotor? = null
     private var armMotor: HaMotor? = null
     private var angleSetpoint: HaRotation2d = HaRotation2d.fromDegrees(0.0)
@@ -183,12 +182,10 @@ object LoaderSubsystem: Subsystem() {
     // Arm functions
     fun loadToShooter() {
         armServo?.currentCommandedPosition = Constants.OPEN_ARM_ANGLE
-        armMotor?.setVoltage(Constants.ARM_MOTOR_VOLTAGE)
     }
 
     fun stopLoadingToShooter() {
         armServo?.currentCommandedPosition = Constants.RETRACTED_ARM_ANGLE
-        armMotor?.stopMotor()
     }
 
     // Periodic
