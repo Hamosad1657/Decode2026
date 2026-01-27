@@ -174,9 +174,8 @@ object LoaderSubsystem: Subsystem() {
             }
         }
     }
-
-    fun setServoVoltage(volt: Volts) {
-        rouletteServo?.setVoltage(volt)
+    fun setServoVoltage(volts: Volts) {
+        rouletteServo?.setVoltage(volts)
     }
 
     // Arm functions
