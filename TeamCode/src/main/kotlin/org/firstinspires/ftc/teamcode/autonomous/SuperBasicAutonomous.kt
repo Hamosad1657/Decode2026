@@ -17,7 +17,7 @@ class SuperBasicAutonomous: CommandOpModeAutonomous() {
     override fun getAutonomousCommand(): Command {
         return MecanumSubsystem.angularVelocityDriveCommand(
             false,
-            { 0.0 },
+            { 1.0 },
             { 1.0 },
             { 0.0 }
         ).withTimeout(2.0)
