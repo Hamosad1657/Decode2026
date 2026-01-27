@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.commands.Ball
 object LoaderConstants {
     // NAMES
     const val ROULETTE_SERVO_NAME = "Loader spin servo"
+    const val ROULETTE_SERVO2_NAME = "Loader spin 2 servo"
     const val COLOR_SENSOR_NAME = "Loader color sensor"
     const val ARM_SERVO_NAME = "Loader arm servo"
     const val ARM_MOTOR_NAME = "Loader arm motor"
@@ -19,6 +20,7 @@ object LoaderConstants {
 
     // COUNTER CLOCKWISE POSITIVE!
     val ROULETTE_SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
+    val ROULETTE_SERVO2_DIRECTION = DcMotorSimple.Direction.FORWARD
     val ARM_SERVO_DIRECTION = Servo.Direction.FORWARD
     val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.FORWARD
 
