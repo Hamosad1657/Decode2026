@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderConstants as Const
 
 object LoaderSubsystem: Subsystem() {
     private var rouletteServo: HaCRServoMotor? = null
+    private var rouletteServo2: HaCRServoMotor? = null
     private val rouletteController = PIDFController(
         Constants.ROULETTE_ANGLE_GAINS.p,
         Constants.ROULETTE_ANGLE_GAINS.i,
@@ -30,7 +31,6 @@ object LoaderSubsystem: Subsystem() {
     )
 
     private var colorSensor: HaColorSensor? = null
-
     private var armServo: HaServoMotor? = null
     private var armMotor: HaMotor? = null
     private var angleSetpoint: HaRotation2d = HaRotation2d.fromDegrees(0.0)
@@ -38,11 +38,13 @@ object LoaderSubsystem: Subsystem() {
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
         rouletteServo = HaCRServoMotor(Constants.ROULETTE_SERVO_NAME, hardwareMap!!)
-        colorSensor = HaColorSensor(Constants.COLOR_SENSOR_NAME, hardwareMap!!)
-        armServo = HaServoMotor(Constants.ARM_SERVO_NAME, hardwareMap!!, Constants.ARM_SERVO_RANGE)
+        rouletteServo2 = HaCRServoMotor(Constants.ROULETTE_SERVO2_NAME, hardwareMap!!)
+        //colorSensor = HaColorSensor(Constants.COLOR_SENSOR_NAME, hardwareMap!!)
+        //armServo = HaServoMotor(Constants.ARM_SERVO_NAME, hardwareMap!!, Constants.ARM_SERVO_RANGE)
         armMotor = HaMotor(Constants.ARM_MOTOR_NAME, hardwareMap!!, MotorType.REV_THROUGH_BORE_ENCODER)
 
         rouletteServo?.direction = Constants.ROULETTE_SERVO_DIRECTION
+        rouletteServo2?.direction = Constants.ROULETTE_SERVO2_DIRECTION
         armServo?.direction = Constants.ARM_SERVO_DIRECTION
         armMotor?.direction = Constants.ARM_MOTOR_DIRECTION
     }
@@ -141,10 +143,12 @@ object LoaderSubsystem: Subsystem() {
 
         errorRad = if (shouldMoveCounterClockwise) errorRad.absoluteValue else -errorRad.absoluteValue
 
-        rouletteServo?.setVoltage(rouletteController.calculate(
+        val voltage = rouletteController.calculate(
             rouletteAngle.asRadians,
             rouletteAngle.asRadians + errorRad
-        ))
+        )
+        rouletteServo?.setVoltage(voltage)
+        rouletteServo2?.setVoltage(voltage)
     }
 
     private fun determineCurrentColor(): BallColor {
@@ -175,20 +179,18 @@ object LoaderSubsystem: Subsystem() {
             }
         }
     }
-
-    fun setServoVoltage(volt: Volts) {
-        rouletteServo?.setVoltage(volt)
+    fun setServoVoltage(volts: Volts) {
+        rouletteServo?.setVoltage(volts)
+        rouletteServo2?.setVoltage(volts)
     }
 
     // Arm functions
     fun loadToShooter() {
         armServo?.currentCommandedPosition = Constants.OPEN_ARM_ANGLE
-        armMotor?.setVoltage(Constants.ARM_MOTOR_VOLTAGE)
     }
 
     fun stopLoadingToShooter() {
         armServo?.currentCommandedPosition = Constants.RETRACTED_ARM_ANGLE
-        armMotor?.stopMotor()
     }
 
     // Periodic
@@ -200,7 +202,7 @@ object LoaderSubsystem: Subsystem() {
     override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
         telemetry.addData("Current roulette angle deg", rouletteAngle.asDegrees)
         telemetry.addData("Current absolute roulette angle deg", absoluteRouletteAngle.asDegrees)
-        telemetry.addData("Current angle setpoint deg", angleSetpoint)
+        telemetry.addData("Current angle setpoint deg", angleSetpoint.asDegrees)
 
         telemetry.addData("Is at setpoint", isAtSetpoint)
 
