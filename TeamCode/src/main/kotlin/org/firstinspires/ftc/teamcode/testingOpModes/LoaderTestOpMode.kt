@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.commands.positionBallToIntakeCommand
 import org.firstinspires.ftc.teamcode.commands.positionBallToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.positionColorToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.setServoVoltageCommand
+import org.firstinspires.ftc.teamcode.commands.stopLoadingToShooterCommand
 import org.firstinspires.ftc.teamcode.subsystems.loader.BallColor
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 
@@ -18,16 +19,14 @@ class LoaderTestOpMode: CommandOpModeTeleop() {
     override var subsystemsToUse: List<Subsystem> = listOf(LoaderSubsystem)
     val controller = HaCommandController({ super.gamepad1 }, 0.03, 1)
 
-    override fun configureBindings() {
-        controller.l2Pressed().whileTrue(LoaderSubsystem.setServoVoltageCommand(6.0))
-        controller.cross().whileTrue(LoaderSubsystem.positionBallToShooterCommand(Ball.BALL_1))
-        controller.circle().whileTrue(LoaderSubsystem.positionBallToIntakeCommand(Ball.BALL_1))
-        controller.r1().whileTrue(LoaderSubsystem.loadToShooterCommand())
-        controller.l1().whileTrue(LoaderSubsystem.positionColorToShooterCommand(BallColor.GREEN))
-
-
+    override fun configureDefaultCommands() {
     }
 
-    override fun configureDefaultCommands() {
+    override fun configureBindings() {
+        controller.l2Pressed().whileTrue(LoaderSubsystem.setServoVoltageCommand(6.0))
+        controller.r1().onTrue(LoaderSubsystem.loadToShooterCommand())
+        controller.l1().onTrue(LoaderSubsystem.stopLoadingToShooterCommand())
+
+
     }
 }

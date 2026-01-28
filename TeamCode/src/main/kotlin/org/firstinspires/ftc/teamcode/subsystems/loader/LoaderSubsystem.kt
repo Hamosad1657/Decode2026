@@ -40,7 +40,7 @@ object LoaderSubsystem: Subsystem() {
         rouletteServo = HaCRServoMotor(Constants.ROULETTE_SERVO_NAME, hardwareMap!!)
         rouletteServo2 = HaCRServoMotor(Constants.ROULETTE_SERVO2_NAME, hardwareMap!!)
         //colorSensor = HaColorSensor(Constants.COLOR_SENSOR_NAME, hardwareMap!!)
-        //armServo = HaServoMotor(Constants.ARM_SERVO_NAME, hardwareMap!!, Constants.ARM_SERVO_RANGE)
+        armServo = HaServoMotor(Constants.ARM_SERVO_NAME, hardwareMap!!, Constants.ARM_SERVO_RANGE)
         armMotor = HaMotor(Constants.ARM_MOTOR_NAME, hardwareMap!!, MotorType.REV_THROUGH_BORE_ENCODER)
 
         rouletteServo?.direction = Constants.ROULETTE_SERVO_DIRECTION

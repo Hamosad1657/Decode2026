@@ -65,8 +65,8 @@ object LoaderConstants {
     val PURPLE_COLOR = Color(255, 0, 255)
 
     // ARM VALUES
-    val RETRACTED_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
-    val OPEN_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
+    val RETRACTED_ARM_ANGLE = HaRotation2d.fromDegrees(20.0)
+    val OPEN_ARM_ANGLE = HaRotation2d.fromDegrees(115.0)
 
     const val ARM_MOTOR_VOLTAGE: Volts = 6.0
 }
@@ -76,7 +76,6 @@ enum class BallColor {
     GREEN,
     UNKNOWN,
 }
-// Hi
 enum class ColorPattern(val pattern: Array<BallColor>, val id: Int) {
     PPG(arrayOf(BallColor.PURPLE, BallColor.PURPLE, BallColor.GREEN), 23),
     PGP(arrayOf(BallColor.PURPLE, BallColor.GREEN, BallColor.PURPLE), 22),

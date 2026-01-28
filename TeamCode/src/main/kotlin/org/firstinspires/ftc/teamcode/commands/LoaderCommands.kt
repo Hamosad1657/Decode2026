@@ -51,6 +51,10 @@ fun LoaderSubsystem.loadToShooterCommand(): Command = runCommand {
     loadToShooter()
 } finallyDo { stopLoadingToShooter() }
 
+fun LoaderSubsystem.stopLoadingToShooterCommand(): Command = runCommand {
+    stopLoadingToShooter()
+}
+
 fun LoaderSubsystem.positionColorToShooterCommand(color: BallColor): Command =
     positionBallToShooterCommand {
         when (color) {
