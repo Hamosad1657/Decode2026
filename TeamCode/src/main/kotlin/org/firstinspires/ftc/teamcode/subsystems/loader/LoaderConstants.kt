@@ -21,7 +21,7 @@ object LoaderConstants {
     // COUNTER CLOCKWISE POSITIVE!
     val ROULETTE_SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
     val ROULETTE_SERVO2_DIRECTION = DcMotorSimple.Direction.FORWARD
-    val ARM_SERVO_DIRECTION = Servo.Direction.FORWARD
+    val ARM_SERVO_DIRECTION = Servo.Direction.REVERSE
     val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.FORWARD
 
     val ARM_SERVO_RANGE = HaRotation2d.fromDegrees(180.0)
@@ -66,7 +66,7 @@ object LoaderConstants {
 
     // ARM VALUES
     val RETRACTED_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
-    val OPEN_ARM_ANGLE = HaRotation2d.fromDegrees(0.0)
+    val OPEN_ARM_ANGLE = HaRotation2d.fromDegrees(180.0)
 
     const val ARM_MOTOR_VOLTAGE: Volts = 6.0
 }
@@ -76,7 +76,6 @@ enum class BallColor {
     GREEN,
     UNKNOWN,
 }
-// Hi
 enum class ColorPattern(val pattern: Array<BallColor>, val id: Int) {
     PPG(arrayOf(BallColor.PURPLE, BallColor.PURPLE, BallColor.GREEN), 23),
     PGP(arrayOf(BallColor.PURPLE, BallColor.GREEN, BallColor.PURPLE), 22),
