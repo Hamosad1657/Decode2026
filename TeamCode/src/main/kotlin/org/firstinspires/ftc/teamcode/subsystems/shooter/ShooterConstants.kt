@@ -12,24 +12,24 @@ data class ShooterState(public val angle: HaRotation2d, public val speed: Angula
 
 object ShooterConstants {
     val WHEEL_VELOCITY_GAINS = PIDGains(
-        0.0,
+        1.0,
         0.0,
         0.0
     )
 
     val HOOD_ANGLE_GAINS = PIDGains(
-        0.0,
+        1.0,
         0.0,
         0.0
     )
 
 
-    val LEFT_MOTOR_NAME = ""
-    val RIGHT_MOTOR_NAME = ""
-    val SERVO_NAME = ""
+    val LEFT_MOTOR_NAME = "LM Shooter"
+    val RIGHT_MOTOR_NAME = "RM Shooter"
+    val SERVO_NAME = "Shooter Servo"
     const val SPEED_TRANSMISSION_RATIO: Double = 0.0
-    const val HOOD_ANGLE_TRANSMISSION_RATIO: Double = 0.0
-    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
+    const val HOOD_ANGLE_TRANSMISSION_RATIO: Double = 0.222
+    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.REVERSE
     val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
     val SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
 

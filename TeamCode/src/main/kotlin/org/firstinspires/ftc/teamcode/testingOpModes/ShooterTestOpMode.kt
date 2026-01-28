@@ -20,10 +20,14 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
     override var subsystemsToUse: List<Subsystem> = listOf(ShooterSubsystem)
     val controller = HaCommandController({ super.gamepad1 }, 0.03, 1)
 
+    override fun configureDefaultCommands() {
+        ShooterSubsystem.defaultCommand = ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPS(0.0))
+    }
+
     override fun configureBindings() {
         controller.r2Pressed().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(
             ShooterState(HaRotation2d.fromDegrees(25.0),
-                AngularVelocity.fromRPS(30.0)
+                AngularVelocity.fromRPS(90.0)
             )))
         controller.l2Pressed().whileTrue(ShooterSubsystem.setWheelMotorsVoltageCommand(9.0))
         controller.r1().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
@@ -32,7 +36,4 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
             Length.fromMeters(1.0))))
     }
 
-    override fun configureDefaultCommands() {
-
-    }
 }
