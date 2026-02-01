@@ -88,6 +88,8 @@ object MecanumSubsystem: Subsystem() {
                 Constants.APRIL_TAG_STD_DEVS
             )
         }
+
+        resetGyro()
     }
 
     // -- Property getters --
