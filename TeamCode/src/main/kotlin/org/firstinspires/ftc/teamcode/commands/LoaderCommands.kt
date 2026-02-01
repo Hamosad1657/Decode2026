@@ -71,14 +71,13 @@ fun LoaderSubsystem.setServoVoltageCommand(volt: Volts): Command = runCommand {
 }
 
 fun LoaderSubsystem.manualControlCommand(leftJoyX: () -> Double, isR1Pressed: () -> Boolean) = runCommand {
-    setServoVoltage(leftJoyX() * 6.0)
+    setServoVoltage(leftJoyX())
     if (isR1Pressed()) {
         loadToShooter()
     } else {
         stopLoadingToShooter()
     }
 }
-
 // INTAKING
 fun LoaderSubsystem.positionBallToIntakeCommand(ball: Ball): Command =
     holdRoulettePositionCommand(
