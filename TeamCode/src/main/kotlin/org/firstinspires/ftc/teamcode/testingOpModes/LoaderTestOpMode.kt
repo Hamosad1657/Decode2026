@@ -20,12 +20,14 @@ class LoaderTestOpMode: CommandOpModeTeleop() {
     val controller = HaCommandController({ super.gamepad1 }, 0.03, 1)
 
     override fun configureDefaultCommands() {
+        LoaderSubsystem.defaultCommand = LoaderSubsystem.setServoVoltageCommand(0.0)
     }
 
     override fun configureBindings() {
-        controller.l2Pressed().whileTrue(LoaderSubsystem.setServoVoltageCommand(6.0))
-        controller.r1().onTrue(LoaderSubsystem.loadToShooterCommand())
-        controller.l1().onTrue(LoaderSubsystem.stopLoadingToShooterCommand())
+        controller.l1().whileTrue(LoaderSubsystem.setServoVoltageCommand(6.0))
+        controller.r2Pressed().whileTrue(LoaderSubsystem.positionBallToIntakeCommand(LoaderSubsystem.closestBallToIntake))
+        controller.l2Pressed().whileTrue(LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter))
+
 
 
     }

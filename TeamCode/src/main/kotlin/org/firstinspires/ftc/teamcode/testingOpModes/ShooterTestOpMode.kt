@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleAndWheelSpeedCommand
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleCommand
 import org.firstinspires.ftc.teamcode.commands.maintainWheelSpeedCommand
+import org.firstinspires.ftc.teamcode.commands.setServoVoltageCommand
 import org.firstinspires.ftc.teamcode.commands.setWheelMotorsVoltageCommand
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterState
 import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
@@ -34,6 +35,7 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
         controller.l1().whileTrue(ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPS(50.0)))
         controller.cross().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(interpolateDistanceToShooterState(
             Length.fromMeters(1.0))))
+        controller.circle().whileTrue(ShooterSubsystem.setServoVoltageCommand(6.0))
     }
 
 }

@@ -37,3 +37,4 @@ fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState: () -> S
 // TESTING
 
 fun ShooterSubsystem.setWheelMotorsVoltageCommand(voltage: Volts) = ShooterSubsystem.runCommand { setWheelMotorsVoltage(voltage) }
+fun ShooterSubsystem.setServoVoltageCommand(voltage: Volts) = ShooterSubsystem.runCommand { setServoVoltage(voltage) }

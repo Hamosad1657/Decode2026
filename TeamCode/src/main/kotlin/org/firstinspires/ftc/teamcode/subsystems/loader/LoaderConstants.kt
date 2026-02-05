@@ -28,7 +28,7 @@ object LoaderConstants {
 
     // PID GAINS
     val ROULETTE_ANGLE_GAINS = PIDGains(
-        0.0,
+        1.0,
         0.0,
         0.0,
     )

@@ -27,10 +27,10 @@ object ShooterConstants {
     val LEFT_MOTOR_NAME = "LM Shooter"
     val RIGHT_MOTOR_NAME = "RM Shooter"
     val SERVO_NAME = "Shooter Servo"
-    const val SPEED_TRANSMISSION_RATIO: Double = 0.0
+    const val SPEED_TRANSMISSION_RATIO: Double = -1.0
     const val HOOD_ANGLE_TRANSMISSION_RATIO: Double = 0.222
-    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.REVERSE
-    val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
+    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
+    val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.REVERSE
     val SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
 
     val MAX_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
