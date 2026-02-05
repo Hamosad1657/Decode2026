@@ -35,7 +35,7 @@ object ShooterSubsystem: Subsystem() {
     override fun init(newHardwareMap: HardwareMap) {
         super.init(newHardwareMap)
         rightMotor = HaMotor(ShooterConstants.RIGHT_MOTOR_NAME, hardwareMap!!, MotorType.GO_BUILDA5202)
-        leftMotor = HaMotor(ShooterConstants.LEFT_MOTOR_NAME, hardwareMap!!, MotorType.GO_BUILDA5202)
+        leftMotor = HaMotor(ShooterConstants.LEFT_MOTOR_NAME, hardwareMap!!, MotorType.REV_THROUGH_BORE_ENCODER)
         servo = HaCRServoMotor(ShooterConstants.SERVO_NAME, hardwareMap!!)
         leftMotor?.direction = ShooterConstants.LEFT_MOTOR_DIRECTION
         rightMotor?.direction = ShooterConstants.RIGHT_MOTOR_DIRECTION
@@ -74,7 +74,7 @@ object ShooterSubsystem: Subsystem() {
         if (desiredHoodAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
             servo?.setVoltage(hoodAnglePIDController.calculate(
                 currentHoodAngle.asDegrees,
-                   (desiredHoodAngle.asDegrees - ShooterConstants.MIN_HOOD_ANGLE.asDegrees) / ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO))
+                   desiredHoodAngle.asDegrees / ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO))
         }
     }
 
@@ -88,6 +88,11 @@ object ShooterSubsystem: Subsystem() {
         leftMotor?.setVoltage(voltage)
     }
 
+    fun setServoVoltage(voltage: Volts) {
+        servo?.setVoltage(voltage)
+    }
+
+
     override fun periodic() {
     }
 
@@ -96,6 +101,7 @@ object ShooterSubsystem: Subsystem() {
         dashboardPacket.put("Shooter motor velocity", currentMotorVelocity)
 
         dashboardPacket.put("Hood angle", currentHoodAngle)
+
         dashboardPacket.put("Shooter velocity", currentShooterVelocity)
 
         dashboardPacket.put("Is current above threshold", isCurrentAboveThreshold)
@@ -103,5 +109,17 @@ object ShooterSubsystem: Subsystem() {
         dashboardPacket.put("Is within velocity tolerance", isWithinVelocityTolerance)
         dashboardPacket.put("Is within angle tolerance", isWithinAngleTolerance)
 
+        telemetry.addData("Shooter motor velocity", currentMotorVelocity.asRPS)
+        telemetry.addData("Servo angle", currentServoAngle.asDegrees)
+
+        telemetry.addData("Hood angle", currentHoodAngle.asDegrees)
+        telemetry.addData("desired hood angle", desiredHoodAngle.asDegrees)
+        telemetry.addData("Shooter velocity", currentShooterVelocity.asRPS)
+        telemetry.addData("desired velocity", desiredVelocity.asRPS)
+
+        telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
+
+        telemetry.addData("Is within angle tolerance", isWithinAngleTolerance)
+        telemetry.addData("Is within velocity tolerance", isWithinVelocityTolerance)
     }
 }
