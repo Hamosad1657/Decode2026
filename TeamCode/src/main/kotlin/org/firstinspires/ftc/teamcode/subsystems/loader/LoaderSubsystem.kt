@@ -65,8 +65,15 @@ object LoaderSubsystem: Subsystem() {
 
 
     val isAtSetpoint: Boolean
-        get() = (absoluteRouletteAngle.asDegrees in (
-                angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees))
+        get() = if (angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees < 0.0)
+            (absoluteRouletteAngle.asDegrees in (
+                    angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees + 360.0)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees))
+            else if (angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees > 360.0)
+                    (absoluteRouletteAngle.asDegrees in (
+                angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees - 360.0))
+            else
+            (absoluteRouletteAngle.asDegrees in (
+                    angleSetpoint.asDegrees - Constants.ROULETTE_TOLERANCE.asDegrees)..(angleSetpoint.asDegrees + Constants.ROULETTE_TOLERANCE.asDegrees))
 
     var ball1Color: BallColor = BallColor.UNKNOWN
         private set
