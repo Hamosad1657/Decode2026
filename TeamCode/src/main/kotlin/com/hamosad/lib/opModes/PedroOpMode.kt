@@ -75,7 +75,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         dashboardManager.update(super.telemetry)
     }
 
-    fun autonomousPathUpdate(): Int {
+    private fun autonomousPathUpdate(): Int {
         // Event markers will automatically trigger at their positions
         // Make sure to register NamedCommands in your RobotContainer
         return pathState

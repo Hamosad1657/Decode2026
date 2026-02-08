@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class PedroConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(5.0)
+            .mass(11.5)
             .forwardZeroPowerAcceleration(-42.2235)
             .lateralZeroPowerAcceleration(-129.9665);
 
