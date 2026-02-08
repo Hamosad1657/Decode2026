@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.teamcode.ShootClose.Paths
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
-import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants as Constants
 
 
 class ShootClose2Times : PedroOpMode() {
