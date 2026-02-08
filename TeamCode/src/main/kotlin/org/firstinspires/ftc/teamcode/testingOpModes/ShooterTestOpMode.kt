@@ -28,14 +28,18 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
     override fun configureBindings() {
         controller.r2Pressed().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(
             ShooterState(HaRotation2d.fromDegrees(25.0),
-                AngularVelocity.fromRPS(90.0)
+                AngularVelocity.fromRPM(250.0)
             )))
-        controller.l2Pressed().whileTrue(ShooterSubsystem.setWheelMotorsVoltageCommand(9.0))
+        controller.l2Pressed().whileTrue(ShooterSubsystem.setWheelMotorsVoltageCommand(12.0))
         controller.r1().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
         controller.l1().whileTrue(ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPS(50.0)))
         controller.cross().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(interpolateDistanceToShooterState(
             Length.fromMeters(1.0))))
-        controller.circle().whileTrue(ShooterSubsystem.setServoVoltageCommand(6.0))
+        controller.circle().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(0.0)))
+        controller.dpadUp().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(10.0)))
+        controller.dpadLeft().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(25.0)))
+        controller.dpadDown().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
+        controller.dpadRight().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(70.0)))
     }
 
 }
