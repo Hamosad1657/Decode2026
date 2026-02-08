@@ -1,8 +1,7 @@
 package com.hamosad.lib.opModes
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
-import com.hamosad.lib.commands.Command
+import com.bylazar.telemetry.PanelsTelemetry
+import com.bylazar.telemetry.TelemetryManager
 import com.hamosad.lib.commands.CommandScheduler
 import com.hamosad.lib.commands.Subsystem
 import com.pedropathing.follower.Follower
@@ -42,13 +41,12 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     }
 
     final override fun disabledPeriodic() {
-        val packet = TelemetryPacket()
         for (subsystem in subsystemsToUse) {
             subsystem.periodic()
-            if (useTelemetry) subsystem.updateTelemetry(super.telemetry, packet)
+            if (useTelemetry) subsystem.updateTelemetry(super.telemetry)
         }
         super.telemetry.update()
-        FtcDashboard.getInstance().sendTelemetryPacket(packet)
+        dashboardManager.update(super.telemetry)
     }
 
     final override fun startInit() {
@@ -61,12 +59,9 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     final override fun startPeriodic() {
         CommandScheduler.execute()
         if (useTelemetry) {
-            val packet = TelemetryPacket()
             for (subsystem in subsystemsToUse) {
-                subsystem.updateTelemetry(super.telemetry, packet)
+                subsystem.updateTelemetry(super.telemetry)
             }
-            super.telemetry.update()
-            FtcDashboard.getInstance().sendTelemetryPacket(packet)
         }
 
         follower?.update() // Update Pedro Pathing
@@ -78,6 +73,8 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         telemetry.addData("Y", follower?.pose?.y ?: 0)
         telemetry.addData("Heading", follower!!.pose.heading)
         telemetry.update()
+
+        dashboardManager.update(super.telemetry)
     }
 
     fun autonomousPathUpdate(): Int {

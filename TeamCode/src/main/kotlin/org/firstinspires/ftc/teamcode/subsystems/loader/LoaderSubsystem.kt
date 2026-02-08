@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.loader
 
-import android.provider.SyncStateContract
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaCRServoMotor
 import com.hamosad.lib.components.motors.HaMotor
@@ -206,7 +204,7 @@ object LoaderSubsystem: Subsystem() {
     }
 
     // Telemetry
-    override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
+    override fun updateTelemetry(telemetry: Telemetry) {
         telemetry.addData("Current roulette angle deg", rouletteAngle.asDegrees)
         telemetry.addData("Current absolute roulette angle deg", absoluteRouletteAngle.asDegrees)
         telemetry.addData("Current angle setpoint deg", angleSetpoint.asDegrees)

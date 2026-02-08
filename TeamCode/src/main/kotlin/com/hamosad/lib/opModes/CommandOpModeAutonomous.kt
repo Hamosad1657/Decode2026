@@ -1,13 +1,14 @@
 package com.hamosad.lib.opModes
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.bylazar.telemetry.PanelsTelemetry
+import com.bylazar.telemetry.TelemetryManager
 import com.hamosad.lib.commands.Command
 import com.hamosad.lib.commands.CommandScheduler
 import com.hamosad.lib.commands.Subsystem
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 
 abstract class CommandOpModeAutonomous: OpMode() {
+    val dashboardManager: TelemetryManager = PanelsTelemetry.telemetry
     abstract var subsystemsToUse: List<Subsystem>
 
     var useTelemetry: Boolean = true
@@ -37,13 +38,12 @@ abstract class CommandOpModeAutonomous: OpMode() {
 
     // Called repeatedly after init is pressed
     final override fun init_loop() {
-        val packet = TelemetryPacket()
         for (subsystem in subsystemsToUse) {
             subsystem.periodic()
-            if (useTelemetry) subsystem.updateTelemetry(super.telemetry, packet)
+            if (useTelemetry) subsystem.updateTelemetry(super.telemetry)
         }
         super.telemetry.update()
-        FtcDashboard.getInstance().sendTelemetryPacket(packet)
+        dashboardManager.update(super.telemetry)
     }
 
     // Called when start is pressed
@@ -56,12 +56,11 @@ abstract class CommandOpModeAutonomous: OpMode() {
     final override fun loop() {
         CommandScheduler.execute()
         if (useTelemetry) {
-            val packet = TelemetryPacket()
             for (subsystem in subsystemsToUse) {
-                subsystem.updateTelemetry(super.telemetry, packet)
+                subsystem.updateTelemetry(super.telemetry)
             }
             super.telemetry.update()
-            FtcDashboard.getInstance().sendTelemetryPacket(packet)
+            dashboardManager.update(super.telemetry)
         }
     }
 

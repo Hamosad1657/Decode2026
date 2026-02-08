@@ -1,6 +1,5 @@
 package com.hamosad.lib.commands
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
@@ -21,5 +20,5 @@ abstract class Subsystem() {
     /** From the moment init is pressed, this function is called repeatedly until OpMode is stopped. */
     abstract fun periodic()
 
-    abstract fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket)
+    abstract fun updateTelemetry(telemetry: Telemetry)
 }

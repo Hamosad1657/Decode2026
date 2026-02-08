@@ -1,8 +1,10 @@
 package com.hamosad.lib.opModes
 
+import com.bylazar.telemetry.PanelsTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 
 abstract class TimedRobotOpMode: OpMode() {
+    val dashboardManager = PanelsTelemetry.telemetry
     /** Called once when OpMode init is pressed. */
     abstract fun disabledInit()
 

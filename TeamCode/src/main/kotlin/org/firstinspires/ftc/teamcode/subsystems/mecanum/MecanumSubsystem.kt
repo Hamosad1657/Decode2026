@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.mecanum
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.arcrobotics.ftclib.controller.PIDFController
 import com.arcrobotics.ftclib.geometry.Pose2d
 import com.arcrobotics.ftclib.geometry.Rotation2d
@@ -226,25 +225,25 @@ object MecanumSubsystem: Subsystem() {
     }
 
     // -- Telemetry --
-    override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
+    override fun updateTelemetry(telemetry: Telemetry) {
         val translation = robotPose.translation2d
 
         // FL, BR, FR, BL
         if (wheelVelocitySetpoints.frontLeftMetersPerSecond != 0.0) {
-            dashboardPacket.put("FL Speed setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
-            dashboardPacket.put("BR Speed setpoint MPS", wheelVelocitySetpoints.rearRightMetersPerSecond)
-            dashboardPacket.put("FR Speed setpoint MPS", wheelVelocitySetpoints.frontRightMetersPerSecond)
-            dashboardPacket.put("BL Speed setpoint MPS", wheelVelocitySetpoints.rearLeftMetersPerSecond)
+            telemetry.addData("FL Speed setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
+            telemetry.addData("BR Speed setpoint MPS", wheelVelocitySetpoints.rearRightMetersPerSecond)
+            telemetry.addData("FR Speed setpoint MPS", wheelVelocitySetpoints.frontRightMetersPerSecond)
+            telemetry.addData("BL Speed setpoint MPS", wheelVelocitySetpoints.rearLeftMetersPerSecond)
 
-            dashboardPacket.put("FL velocity MPS", motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            dashboardPacket.put("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            dashboardPacket.put("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            dashboardPacket.put("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            telemetry.addData("FL velocity MPS", motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            telemetry.addData("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            telemetry.addData("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+            telemetry.addData("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
 
-            dashboardPacket.put("Odometry X", translation.x)
-            dashboardPacket.put("Odometry Y", translation.y)
+            telemetry.addData("Odometry X", translation.x)
+            telemetry.addData("Odometry Y", translation.y)
 
-            dashboardPacket.put("Non absolute angle deg", currentAngle.asDegrees)
+            telemetry.addData("Non absolute angle deg", currentAngle.asDegrees)
         }
     }
 }

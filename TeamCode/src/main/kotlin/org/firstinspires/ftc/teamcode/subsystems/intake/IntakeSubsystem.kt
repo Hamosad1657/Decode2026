@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeConstants as Constants
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaMotor
@@ -43,8 +42,8 @@ object IntakeSubsystem: Subsystem() {
     }
 
     // Telemetry
-    override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
-        dashboardPacket.put("Intake velocity RPM", motor?.currentVelocity?.asRPM ?: 0.0)
-        dashboardPacket.put("Is current above threshold", isCurrentOverThreshold)
+    override fun updateTelemetry(telemetry: Telemetry) {
+        telemetry.addData("Intake velocity RPM", motor?.currentVelocity?.asRPM ?: 0.0)
+        telemetry.addData("Is current above threshold", isCurrentOverThreshold)
     }
 }

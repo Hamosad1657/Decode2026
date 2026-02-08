@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.shooter
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaCRServoMotor
 import com.hamosad.lib.components.motors.HaMotor
-import com.hamosad.lib.components.motors.HaServoMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.math.AngularVelocity
 import com.arcrobotics.ftclib.controller.PIDFController
@@ -96,18 +94,18 @@ object ShooterSubsystem: Subsystem() {
     override fun periodic() {
     }
 
-    override fun updateTelemetry(telemetry: Telemetry, dashboardPacket: TelemetryPacket) {
-        dashboardPacket.put("Servo angle", currentServoAngle)
-        dashboardPacket.put("Shooter motor velocity", currentMotorVelocity)
+    override fun updateTelemetry(telemetry: Telemetry) {
+        telemetry.addData("Servo angle", currentServoAngle)
+        telemetry.addData("Shooter motor velocity", currentMotorVelocity)
 
-        dashboardPacket.put("Hood angle", currentHoodAngle)
+        telemetry.addData("Hood angle", currentHoodAngle)
 
-        dashboardPacket.put("Shooter velocity", currentShooterVelocity)
+        telemetry.addData("Shooter velocity", currentShooterVelocity)
 
-        dashboardPacket.put("Is current above threshold", isCurrentAboveThreshold)
+        telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
 
-        dashboardPacket.put("Is within velocity tolerance", isWithinVelocityTolerance)
-        dashboardPacket.put("Is within angle tolerance", isWithinAngleTolerance)
+        telemetry.addData("Is within velocity tolerance", isWithinVelocityTolerance)
+        telemetry.addData("Is within angle tolerance", isWithinAngleTolerance)
 
         telemetry.addData("Shooter motor velocity", currentMotorVelocity.asRPS)
         telemetry.addData("Servo angle", currentServoAngle.asDegrees)
