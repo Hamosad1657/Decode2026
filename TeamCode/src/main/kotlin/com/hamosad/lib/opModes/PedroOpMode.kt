@@ -15,15 +15,12 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     var follower: Follower? = null // Pedro Pathing follower instance
     private var pathState = 0 // Current autonomous path state (state machine)
 
-    /** Set your default commands here. */
-    abstract fun configureDefaultCommands()
 
     abstract fun redefinePaths()
 
 
     final override fun disabledInit() {
         follower = Constants.createFollower(hardwareMap)
-        follower!!.setStartingPose(Pose(72.0, 8.0, Math.toRadians(90.0)))
 
         redefinePaths()
 
@@ -36,8 +33,6 @@ abstract class PedroOpMode: TimedRobotOpMode() {
             }
             CommandScheduler.registerSubsystem(subsystem)
         }
-
-        configureDefaultCommands()
     }
 
     final override fun disabledPeriodic() {
@@ -77,11 +72,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         dashboardManager.update(super.telemetry)
     }
 
-    fun autonomousPathUpdate(): Int {
-        // Event markers will automatically trigger at their positions
-        // Make sure to register NamedCommands in your RobotContainer
-        return pathState
-    }
+    abstract fun autonomousPathUpdate(): Int
 
     /** Called once after stop is pressed. */
     final override fun onEnd() {
