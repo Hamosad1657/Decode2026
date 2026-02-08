@@ -15,6 +15,8 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     var follower: Follower? = null // Pedro Pathing follower instance
     private var pathState = 0 // Current autonomous path state (state machine)
 
+    /** Set your default commands here. */
+    abstract fun configureDefaultCommands()
 
     abstract fun redefinePaths()
 
@@ -33,6 +35,8 @@ abstract class PedroOpMode: TimedRobotOpMode() {
             }
             CommandScheduler.registerSubsystem(subsystem)
         }
+
+        configureDefaultCommands()
     }
 
     final override fun disabledPeriodic() {
