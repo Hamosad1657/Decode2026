@@ -229,21 +229,20 @@ object MecanumSubsystem: Subsystem() {
         val translation = robotPose.translation2d
 
         // FL, BR, FR, BL
-        if (wheelVelocitySetpoints.frontLeftMetersPerSecond != 0.0) {
-            telemetry.addData("FL Speed setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
-            telemetry.addData("BR Speed setpoint MPS", wheelVelocitySetpoints.rearRightMetersPerSecond)
-            telemetry.addData("FR Speed setpoint MPS", wheelVelocitySetpoints.frontRightMetersPerSecond)
-            telemetry.addData("BL Speed setpoint MPS", wheelVelocitySetpoints.rearLeftMetersPerSecond)
+        telemetry.addData("FL velocity setpoint MPS", wheelVelocitySetpoints.frontLeftMetersPerSecond)
+        telemetry.addData("BR velocity setpoint MPS", wheelVelocitySetpoints.rearRightMetersPerSecond)
+        telemetry.addData("FR velocity setpoint MPS", wheelVelocitySetpoints.frontRightMetersPerSecond)
+        telemetry.addData("BL velocity setpoint MPS", wheelVelocitySetpoints.rearLeftMetersPerSecond)
 
-            telemetry.addData("FL velocity MPS", motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            telemetry.addData("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            telemetry.addData("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
-            telemetry.addData("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+        telemetry.addData("FL velocity MPS", motors[0].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+        telemetry.addData("BR velocity MPS", motors[1].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+        telemetry.addData("FR velocity MPS", motors[2].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
+        telemetry.addData("BL velocity MPS", motors[3].currentVelocity.asRPS * Constants.WHEEL_CIRCUMFERENCE.asMeters)
 
-            telemetry.addData("Odometry X", translation.x)
-            telemetry.addData("Odometry Y", translation.y)
+        telemetry.addData("Odometry X", translation.x)
+        telemetry.addData("Odometry Y", translation.y)
 
-            telemetry.addData("Non absolute angle deg", currentAngle.asDegrees)
-        }
+        telemetry.addData("Non absolute angle deg", currentAngle.asDegrees)
     }
+
 }
