@@ -12,13 +12,13 @@ data class ShooterState(public val angle: HaRotation2d, public val speed: Angula
 
 object ShooterConstants {
     val WHEEL_VELOCITY_GAINS = PIDGains(
-        1.0,
+        30.0,
         0.0,
         0.0
     )
 
     val HOOD_ANGLE_GAINS = PIDGains(
-        1.0,
+        0.02,
         0.0,
         0.0
     )
@@ -27,18 +27,19 @@ object ShooterConstants {
     val LEFT_MOTOR_NAME = "LM Shooter"
     val RIGHT_MOTOR_NAME = "RM Shooter"
     val SERVO_NAME = "Shooter Servo"
-    const val SPEED_TRANSMISSION_RATIO: Double = -1.0
+
     const val HOOD_ANGLE_TRANSMISSION_RATIO: Double = 0.222
-    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
-    val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.REVERSE
+
+    val LEFT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.REVERSE
+    val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
     val SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
 
-    val MAX_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
+    val MAX_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(74.0)
     val MIN_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     const val CURRENT_THRESHOLD: Amps = 0.0
     val VELOCITY_TOLERANCE: AngularVelocity = AngularVelocity.fromRPM(0.0)
-    val ANGLE_TOLERANCE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
+    val ANGLE_TOLERANCE: HaRotation2d = HaRotation2d.fromDegrees(5.0)
 
     // SIMPLE CONSTANTS
     val SIMPLE_SPEED: AngularVelocity = AngularVelocity.fromRPM(40.0)

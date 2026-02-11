@@ -1,10 +1,12 @@
 package com.hamosad.lib.opModes
 
+import com.bylazar.telemetry.PanelsTelemetry
+import com.bylazar.telemetry.TelemetryManager
 import com.hamosad.lib.commands.CommandScheduler
 import com.hamosad.lib.commands.Subsystem
 import com.pedropathing.follower.Follower
 import com.pedropathing.geometry.Pose
-import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants
+import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants as Constants
 
 abstract class PedroOpMode: TimedRobotOpMode() {
     abstract var subsystemsToUse: List<Subsystem>
@@ -20,8 +22,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
 
 
     final override fun disabledInit() {
-        follower = PedroConstants.createFollower(hardwareMap)
-        follower!!.setStartingPose(Pose(72.0, 8.0, Math.toRadians(90.0)))
+        follower = Constants.createFollower(hardwareMap)
 
         redefinePaths()
 
@@ -75,11 +76,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         dashboardManager.update(super.telemetry)
     }
 
-    private fun autonomousPathUpdate(): Int {
-        // Event markers will automatically trigger at their positions
-        // Make sure to register NamedCommands in your RobotContainer
-        return pathState
-    }
+    abstract fun autonomousPathUpdate(): Int
 
     /** Called once after stop is pressed. */
     final override fun onEnd() {

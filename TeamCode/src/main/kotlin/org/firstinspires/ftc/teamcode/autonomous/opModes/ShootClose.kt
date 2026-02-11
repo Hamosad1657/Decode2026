@@ -46,10 +46,6 @@ class ShootClose : PedroOpMode() {
         }
     }
 
-    override fun configureDefaultCommands() {
-        TODO()
-    }
-
     override fun runPathStateCommands() {
         TODO()
     }
