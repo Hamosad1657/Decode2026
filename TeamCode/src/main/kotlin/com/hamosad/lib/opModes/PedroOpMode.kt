@@ -1,11 +1,8 @@
 package com.hamosad.lib.opModes
 
-import com.bylazar.telemetry.PanelsTelemetry
-import com.bylazar.telemetry.TelemetryManager
 import com.hamosad.lib.commands.CommandScheduler
 import com.hamosad.lib.commands.Subsystem
 import com.pedropathing.follower.Follower
-import com.pedropathing.geometry.Pose
 import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants as Constants
 
 abstract class PedroOpMode: TimedRobotOpMode() {
