@@ -10,5 +10,5 @@ object IntakeConstants {
     const val INTAKING_VOLTAGE: Volts = 12.0
 
     const val THRESHOLD: Amps = 0.0
-    val DIRECTION = DcMotorSimple.Direction.FORWARD
+    val DIRECTION = DcMotorSimple.Direction.REVERSE
 }
