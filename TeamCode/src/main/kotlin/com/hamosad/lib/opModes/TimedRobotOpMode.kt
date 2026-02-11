@@ -1,10 +1,11 @@
 package com.hamosad.lib.opModes
 
 import com.bylazar.telemetry.PanelsTelemetry
+import com.bylazar.telemetry.TelemetryManager
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 
 abstract class TimedRobotOpMode: OpMode() {
-    val dashboardManager = PanelsTelemetry.telemetry
+    var dashboardManager: TelemetryManager? = null
     /** Called once when OpMode init is pressed. */
     abstract fun disabledInit()
 
@@ -12,6 +13,7 @@ abstract class TimedRobotOpMode: OpMode() {
     /** Do not override this. */
     final override fun init() {
         disabledInit()
+        dashboardManager = PanelsTelemetry.telemetry
     }
 
     /** Called repeatedly after init is pressed. */

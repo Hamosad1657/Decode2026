@@ -7,7 +7,7 @@ import com.hamosad.lib.commands.Subsystem
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 
 abstract class CommandOpModeTeleop: OpMode() {
-    val dashboardManager: TelemetryManager = PanelsTelemetry.telemetry
+    var dashboardManager: TelemetryManager? = null
     abstract var subsystemsToUse: List<Subsystem>
 
     var useTelemetry: Boolean = true
@@ -24,6 +24,7 @@ abstract class CommandOpModeTeleop: OpMode() {
     // Called when init is pressed
     final override fun init() {
         disabledInit()
+        dashboardManager = PanelsTelemetry.telemetry
 
         for (subsystem in subsystemsToUse) {
             subsystem.init(super.hardwareMap)
@@ -42,7 +43,7 @@ abstract class CommandOpModeTeleop: OpMode() {
         }
         if (useTelemetry) {
             super.telemetry.update()
-            dashboardManager.update(super.telemetry)
+            dashboardManager?.update(super.telemetry)
         }
     }
 
@@ -60,7 +61,7 @@ abstract class CommandOpModeTeleop: OpMode() {
                 subsystem.updateTelemetry(super.telemetry)
             }
             super.telemetry.update()
-            dashboardManager.update(super.telemetry)
+            dashboardManager?.update(super.telemetry)
         }
     }
 
