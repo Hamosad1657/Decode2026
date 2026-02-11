@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems.mecanum
 
-import com.arcrobotics.ftclib.geometry.Pose2d
-import com.arcrobotics.ftclib.geometry.Rotation2d
+import com.seattlesolvers.solverslib.geometry.Pose2d
+import com.seattlesolvers.solverslib.geometry.Rotation2d
 import com.pedropathing.ftc.FTCCoordinates
 import com.pedropathing.ftc.PoseConverter
-import com.pedropathing.geometry.PedroCoordinates
 import com.pedropathing.geometry.Pose
 import com.pedropathing.localization.Localizer
 import com.pedropathing.math.Vector

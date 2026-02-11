@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands
 
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds
-import com.arcrobotics.ftclib.purepursuit.Path
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.ChassisSpeeds
+import com.seattlesolvers.solverslib.purepursuit.Path
 import com.hamosad.lib.commands.Command
 import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.math.AngularVelocity

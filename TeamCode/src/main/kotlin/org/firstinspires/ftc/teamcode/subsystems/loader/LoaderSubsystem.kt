@@ -6,9 +6,10 @@ import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.HaServoMotor
 import com.hamosad.lib.components.motors.MotorType
 import com.hamosad.lib.components.sensors.HaColorSensor
-import com.arcrobotics.ftclib.controller.PIDFController
+import com.seattlesolvers.solverslib.controller.PIDFController
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
+import com.hamosad.lib.math.toPIDFController
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.commands.Ball
@@ -21,12 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderConstants as Const
 object LoaderSubsystem: Subsystem() {
     private var rouletteServo: HaCRServoMotor? = null
     private var rouletteServo2: HaCRServoMotor? = null
-    private val rouletteController = PIDFController(
-        Constants.ROULETTE_ANGLE_GAINS.p,
-        Constants.ROULETTE_ANGLE_GAINS.i,
-        Constants.ROULETTE_ANGLE_GAINS.d,
-        Constants.ROULETTE_ANGLE_GAINS.f
-    )
+    private val rouletteController = Constants.ROULETTE_ANGLE_GAINS.toPIDFController()
 
     private var colorSensor: HaColorSensor? = null
     private var armServo: HaServoMotor? = null

@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems.mecanum
 
-import com.arcrobotics.ftclib.controller.PIDFController
-import com.arcrobotics.ftclib.geometry.Pose2d
-import com.arcrobotics.ftclib.geometry.Rotation2d
-import com.arcrobotics.ftclib.geometry.Translation2d
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds
+import com.seattlesolvers.solverslib.controller.PIDFController
+import com.seattlesolvers.solverslib.geometry.Pose2d
+import com.seattlesolvers.solverslib.geometry.Rotation2d
+import com.seattlesolvers.solverslib.geometry.Translation2d
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.ChassisSpeeds
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveKinematics
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveOdometry
+import com.seattlesolvers.solverslib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds
 import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.MotorType

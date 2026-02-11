@@ -1,8 +1,8 @@
 package com.hamosad.lib.math
 
-import com.arcrobotics.ftclib.geometry.Pose2d
-import com.arcrobotics.ftclib.geometry.Rotation2d
-import com.arcrobotics.ftclib.geometry.Translation2d
+import com.seattlesolvers.solverslib.geometry.Pose2d
+import com.seattlesolvers.solverslib.geometry.Rotation2d
+import com.seattlesolvers.solverslib.geometry.Translation2d
 import com.hamosad.lib.vision.RobotPoseStdDevs
 import com.pedropathing.ftc.FTCCoordinates
 import com.pedropathing.ftc.PoseConverter

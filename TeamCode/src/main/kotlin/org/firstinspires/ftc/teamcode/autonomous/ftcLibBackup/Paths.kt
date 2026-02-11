@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous.ftcLibBackup
 
 
-import com.arcrobotics.ftclib.purepursuit.Path
-import com.arcrobotics.ftclib.purepursuit.Waypoint
-import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint
-import com.arcrobotics.ftclib.purepursuit.waypoints.PointTurnWaypoint
-import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint
+import com.seattlesolvers.solverslib.purepursuit.Path
+import com.seattlesolvers.solverslib.purepursuit.Waypoint
+import com.seattlesolvers.solverslib.purepursuit.waypoints.EndWaypoint
+import com.seattlesolvers.solverslib.purepursuit.waypoints.PointTurnWaypoint
+import com.seattlesolvers.solverslib.purepursuit.waypoints.StartWaypoint
 import org.firstinspires.ftc.teamcode.autonomous.PathPoints
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumConstants as Constants
 
