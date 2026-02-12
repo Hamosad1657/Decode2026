@@ -13,8 +13,8 @@ data class ShooterState(public val angle: HaRotation2d, public val speed: Angula
 object ShooterConstants {
     val WHEEL_VELOCITY_GAINS = PIDGains(
         30.0,
-        0.0,
-        0.0
+        2.0,
+        0.5
     )
 
     val HOOD_ANGLE_GAINS = PIDGains(

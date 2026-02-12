@@ -32,7 +32,7 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
             )))
         controller.l2Pressed().whileTrue(ShooterSubsystem.setWheelMotorsVoltageCommand(12.0))
         controller.r1().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
-        controller.l1().whileTrue(ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPS(50.0)))
+        controller.l1().whileTrue(ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPM(100.0)))
         controller.cross().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(interpolateDistanceToShooterState(
             Length.fromMeters(1.0))))
         controller.circle().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(0.0)))
