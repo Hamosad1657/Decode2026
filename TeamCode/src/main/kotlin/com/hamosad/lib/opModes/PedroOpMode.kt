@@ -21,16 +21,15 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     //runs commands in relation to current pathstate
     abstract fun runPathStateCommands()
 
-    fun setPathState(state: Int){
-        pathState = state
-    }
-
     fun setStartTime() {
         startTime = currentTime
     }
 
+    abstract fun definePaths()
+
     final override fun disabledInit() {
         follower = Constants.createFollower(hardwareMap)
+        definePaths()
 
         telemetry.addData("Status", "Initialized")
         telemetry.update()
