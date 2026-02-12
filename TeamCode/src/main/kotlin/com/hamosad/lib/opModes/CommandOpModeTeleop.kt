@@ -39,7 +39,7 @@ abstract class CommandOpModeTeleop: OpMode() {
     final override fun init_loop() {
         for (subsystem in subsystemsToUse) {
             subsystem.periodic()
-            if (useTelemetry) subsystem.updateTelemetry(super.telemetry)
+            if (useTelemetry) subsystem.updateTelemetry(PanelsTelemetry.ftcTelemetry)
         }
         if (useTelemetry) {
             super.telemetry.update()
@@ -58,7 +58,7 @@ abstract class CommandOpModeTeleop: OpMode() {
 
         if (useTelemetry) {
             for (subsystem in subsystemsToUse) {
-                subsystem.updateTelemetry(super.telemetry)
+                subsystem.updateTelemetry(PanelsTelemetry.ftcTelemetry)
             }
             super.telemetry.update()
             dashboardManager?.update(super.telemetry)
