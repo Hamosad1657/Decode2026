@@ -3,6 +3,7 @@ package com.hamosad.lib.opModes
 import com.hamosad.lib.commands.CommandScheduler
 import com.hamosad.lib.commands.Subsystem
 import com.pedropathing.follower.Follower
+import java.util.Timer
 import org.firstinspires.ftc.teamcode.pedropathing.PedroConstants as Constants
 
 abstract class PedroOpMode: TimedRobotOpMode() {
@@ -10,18 +11,26 @@ abstract class PedroOpMode: TimedRobotOpMode() {
     var useTelemetry: Boolean = true
 
     var follower: Follower? = null // Pedro Pathing follower instance
-    private var pathState = 0 // Current autonomous path state (state machine)
+    var pathState = 0 // Current autonomous path state (state machine)
+    val currentTime get() = System.currentTimeMillis()
+    var startTime: Long = 0L
 
-    /** Set your default commands here. */
-    abstract fun configureDefaultCommands()
+    //updates the current pathstate
+    abstract fun autonomousPathUpdate()
 
-    abstract fun redefinePaths()
+    //runs commands in relation to current pathstate
+    abstract fun runPathStateCommands()
 
+    fun setPathState(state: Int){
+        pathState = state
+    }
+
+    fun setStartTime() {
+        startTime = currentTime
+    }
 
     final override fun disabledInit() {
         follower = Constants.createFollower(hardwareMap)
-
-        redefinePaths()
 
         telemetry.addData("Status", "Initialized")
         telemetry.update()
@@ -32,8 +41,6 @@ abstract class PedroOpMode: TimedRobotOpMode() {
             }
             CommandScheduler.registerSubsystem(subsystem)
         }
-
-        configureDefaultCommands()
     }
 
     final override fun disabledPeriodic() {
@@ -42,14 +49,13 @@ abstract class PedroOpMode: TimedRobotOpMode() {
             if (useTelemetry) subsystem.updateTelemetry(super.telemetry)
         }
         super.telemetry.update()
-        dashboardManager.update(super.telemetry)
+        dashboardManager?.update(super.telemetry)
     }
 
     final override fun startInit() {
+        setStartTime()
         CommandScheduler.initialize()
     }
-
-    abstract fun runPathStateCommands()
 
     /** Called repeatedly after start is pressed. */
     final override fun startPeriodic() {
@@ -61,7 +67,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         }
 
         follower?.update() // Update Pedro Pathing
-        pathState = autonomousPathUpdate() // Update autonomous state machine
+        autonomousPathUpdate() // Update autonomous state machine
 
         // Log values to Panels and Driver Station
         telemetry.addData("Path State", pathState)
@@ -70,10 +76,8 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         telemetry.addData("Heading", follower!!.pose.heading)
         telemetry.update()
 
-        dashboardManager.update(super.telemetry)
+        dashboardManager?.update(super.telemetry)
     }
-
-    abstract fun autonomousPathUpdate(): Int
 
     /** Called once after stop is pressed. */
     final override fun onEnd() {
