@@ -85,13 +85,12 @@ object ShooterSubsystem: Subsystem() {
         telemetry.addData("Is within velocity tolerance", isWithinVelocityTolerance)
         telemetry.addData("Is within angle tolerance", isWithinAngleTolerance)
 
-        telemetry.addData("Shooter motor velocity", currentShooterVelocity.asRPM)
-        telemetry.addData("Servo angle", currentServoAngle.asDegrees)
+        telemetry.addData("Servo angle deg", currentServoAngle.asDegrees)
 
-        telemetry.addData("Hood angle", currentHoodAngle.asDegrees)
-        telemetry.addData("desired hood angle", desiredHoodAngle.asDegrees)
-        telemetry.addData("Shooter velocity", currentShooterVelocity.asRPM)
-        telemetry.addData("desired velocity", desiredVelocity.asRPM)
+        telemetry.addData("Hood angle deg", currentHoodAngle.asDegrees)
+        telemetry.addData("desired hood angle deg", desiredHoodAngle.asDegrees)
+        telemetry.addData("Shooter velocity RPM", currentShooterVelocity.asRPM)
+        telemetry.addData("desired velocity RPM", desiredVelocity.asRPM)
 
         telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
 
