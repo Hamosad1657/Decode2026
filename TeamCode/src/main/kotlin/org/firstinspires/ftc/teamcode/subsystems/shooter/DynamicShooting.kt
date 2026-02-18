@@ -50,6 +50,6 @@ private fun interpolateVelocity(distance: Length): AngularVelocity {
     return AngularVelocity.fromRPM(0.0)
 }
 
-fun interpolateDistanceToShooterState(distance: Length): ShooterState {
-    return ShooterState(interpolateRotation(distance), interpolateVelocity(distance))
-}
+//fun interpolateDistanceToShooterState(distance: Length): ShooterState {
+//    return ShooterState(interpolateRotation(distance), interpolateVelocity(distance))
+//}

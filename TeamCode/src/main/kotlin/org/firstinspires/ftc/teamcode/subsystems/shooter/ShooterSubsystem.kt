@@ -12,8 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 object ShooterSubsystem: Subsystem() {
-
-    private val speedPIDController = ShooterConstants.WHEEL_VELOCITY_GAINS.toPIDFController()
     private var rightMotor: HaMotor? = null
     private var leftMotor: HaMotor? = null
     private var servo: HaCRServoMotor? = null
@@ -30,31 +28,16 @@ object ShooterSubsystem: Subsystem() {
         leftMotor?.resetEncoder() // shooter must start at min angle
     }
 
-    val currentShooterVelocity: AngularVelocity get() = AngularVelocity.fromRPS(-1 * (rightMotor?.currentVelocity?.asRPS ?: 0.0))
     val currentServoAngle: HaRotation2d get() = HaRotation2d.fromDegrees(-1 * (leftMotor?.currentPosition?.asDegrees ?: 0.0)) //we are using the left motor's encoder slot for the servo's encoder
     val currentHoodAngle: HaRotation2d get() = ShooterConstants.MIN_HOOD_ANGLE + currentServoAngle * ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO
 
     val isCurrentAboveThreshold: Boolean get() = rightMotor?.isCurrentOver(ShooterConstants.CURRENT_THRESHOLD) ?: false
-    val isWithinVelocityTolerance: Boolean get() = currentShooterVelocity.asRPS in (desiredVelocity.asRPS - ShooterConstants.VELOCITY_TOLERANCE.asRPS)..(desiredVelocity.asRPS + ShooterConstants.VELOCITY_TOLERANCE.asRPS)
-    val isWithinAngleTolerance: Boolean get() = currentHoodAngle.asDegrees in (currentHoodAngle.asDegrees - ShooterConstants.ANGLE_TOLERANCE.asDegrees)..(currentHoodAngle.asDegrees + ShooterConstants.ANGLE_TOLERANCE.asDegrees)
-    val isWithinTolerance: Boolean get() = isWithinVelocityTolerance && isWithinAngleTolerance
-
-    var desiredVelocity: AngularVelocity = AngularVelocity.fromRPM(0.0)
-
-    fun updateShooterVelocityControl(newVelocitySetpoint: AngularVelocity = desiredVelocity) {
-        desiredVelocity = newVelocitySetpoint
-
-        val voltage = speedPIDController.calculate(currentShooterVelocity.asRPS, desiredVelocity.asRPS)
-        rightMotor?.setVoltage(voltage)
-        leftMotor?.setVoltage(voltage)
-    }
-
+    val isWithinTolerance: Boolean get() = currentHoodAngle.asDegrees in (currentHoodAngle.asDegrees - ShooterConstants.ANGLE_TOLERANCE.asDegrees)..(currentHoodAngle.asDegrees + ShooterConstants.ANGLE_TOLERANCE.asDegrees)
     var desiredHoodAngle: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     fun updateHoodAngleControl(newAngleSetpoint: HaRotation2d = desiredHoodAngle) {
-        desiredHoodAngle = newAngleSetpoint
-
         if (desiredHoodAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
+            desiredHoodAngle = newAngleSetpoint
             servo?.setVoltage(hoodAnglePIDController.calculate(
                 currentHoodAngle.asDegrees,
                    desiredHoodAngle.asDegrees / ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO))
@@ -82,19 +65,14 @@ object ShooterSubsystem: Subsystem() {
     override fun updateTelemetry(telemetry: Telemetry) {
         telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
 
-        telemetry.addData("Is within velocity tolerance", isWithinVelocityTolerance)
-        telemetry.addData("Is within angle tolerance", isWithinAngleTolerance)
 
         telemetry.addData("Servo angle deg", currentServoAngle.asDegrees)
 
         telemetry.addData("Hood angle deg", currentHoodAngle.asDegrees)
         telemetry.addData("desired hood angle deg", desiredHoodAngle.asDegrees)
-        telemetry.addData("Shooter velocity RPM", currentShooterVelocity.asRPM)
-        telemetry.addData("desired velocity RPM", desiredVelocity.asRPM)
 
         telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
 
-        telemetry.addData("Is within angle tolerance", isWithinAngleTolerance)
-        telemetry.addData("Is within velocity tolerance", isWithinVelocityTolerance)
+        telemetry.addData("Is within angle tolerance", isWithinTolerance)
     }
 }
