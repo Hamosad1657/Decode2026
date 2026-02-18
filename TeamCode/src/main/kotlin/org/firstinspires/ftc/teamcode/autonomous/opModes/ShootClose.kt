@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.shootAllBallsInColorPatternComman
 import org.firstinspires.ftc.teamcode.commands.shootAllBallsInPatternCommand
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
+//import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
 
 @Autonomous
 class ShootClose : PedroOpMode() {

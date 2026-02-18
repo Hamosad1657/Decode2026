@@ -32,6 +32,7 @@ abstract class PedroOpMode: TimedRobotOpMode() {
         definePaths()
 
         telemetry.addData("Status", "Initialized")
+        telemetry.addData("current pathstate number", pathState)
         telemetry.update()
 
         for (subsystem in subsystemsToUse) {
