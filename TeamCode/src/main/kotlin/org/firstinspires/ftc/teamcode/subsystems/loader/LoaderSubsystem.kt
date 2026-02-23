@@ -25,7 +25,6 @@ object LoaderSubsystem: Subsystem() {
     private val rouletteController = Constants.ROULETTE_ANGLE_GAINS.toPIDFController()
 
     private var colorSensor: HaColorSensor? = null
-    private var armServo: HaServoMotor? = null
     private var armMotor: HaMotor? = null
     private var angleSetpoint: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
@@ -34,12 +33,10 @@ object LoaderSubsystem: Subsystem() {
         rouletteServo = HaCRServoMotor(Constants.ROULETTE_SERVO_NAME, hardwareMap!!)
         rouletteServo2 = HaCRServoMotor(Constants.ROULETTE_SERVO2_NAME, hardwareMap!!)
         //colorSensor = HaColorSensor(Constants.COLOR_SENSOR_NAME, hardwareMap!!)
-        armServo = HaServoMotor(Constants.ARM_SERVO_NAME, hardwareMap!!, Constants.ARM_SERVO_RANGE)
         armMotor = HaMotor(Constants.ARM_MOTOR_NAME, hardwareMap!!, MotorType.REV_THROUGH_BORE_ENCODER)
 
         rouletteServo?.direction = Constants.ROULETTE_SERVO_DIRECTION
         rouletteServo2?.direction = Constants.ROULETTE_SERVO2_DIRECTION
-        armServo?.direction = Constants.ARM_SERVO_DIRECTION
         armMotor?.direction = Constants.ARM_MOTOR_DIRECTION
     }
     // Properties
@@ -187,11 +184,11 @@ object LoaderSubsystem: Subsystem() {
 
     // Arm functions
     fun loadToShooter() {
-        armServo?.currentCommandedPosition = Constants.OPEN_ARM_ANGLE
+        armMotor?.setVoltage(Constants.LOAD_TO_SHOOTER_VOLTAGE)
     }
 
     fun stopLoadingToShooter() {
-        armServo?.currentCommandedPosition = Constants.RETRACTED_ARM_ANGLE
+        armMotor?.setVoltage(0.0)
     }
 
     // Periodic
