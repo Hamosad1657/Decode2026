@@ -20,12 +20,12 @@ object LoaderConstants {
     // COUNTER CLOCKWISE POSITIVE!
     val ROULETTE_SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
     val ROULETTE_SERVO2_DIRECTION = DcMotorSimple.Direction.FORWARD
-    val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.FORWARD
+    val ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.REVERSE
     val LOAD_TO_SHOOTER_VOLTAGE: Volts = 12.0
 
     // PID GAINS
     val ROULETTE_ANGLE_GAINS = PIDGains(
-        1.0,
+        1.2,
         0.0,
         0.0,
     )

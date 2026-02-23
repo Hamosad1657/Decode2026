@@ -48,4 +48,10 @@ object ShooterConstants {
     val DISTANCE_TO_VELOCITY_TABLE: Map<Length, AngularVelocity> = mapOf(
         Pair(Length.fromMeters(0.0), AngularVelocity.fromRPM(0.0))
     )
+
+    //Shooter States
+    val ShooterState1: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
+    val ShooterState2: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
+    val ShooterState3: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
+    val ShooterState4: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
 }

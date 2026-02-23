@@ -188,7 +188,7 @@ object LoaderSubsystem: Subsystem() {
     }
 
     fun stopLoadingToShooter() {
-        armMotor?.setVoltage(0.0)
+        armMotor?.stopMotor()
     }
 
     // Periodic
