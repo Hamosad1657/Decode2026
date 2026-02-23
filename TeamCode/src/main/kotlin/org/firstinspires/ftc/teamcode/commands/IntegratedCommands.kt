@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterState
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
+//import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
 
 // -- INTAKE --
 
@@ -170,8 +170,8 @@ fun shootAllBallsInColorPatternCommand(colorPattern: ColorPattern, shooterState:
 val BLUE_GATE_POSITION = Translation2d(0.0, 3.556)
 val RED_GATE_POSITION = Translation2d(3.556, 3.556)
 
-fun getCurrentDynamicShooterState(isRedAlliance: Boolean): ShooterState {
-    return interpolateDistanceToShooterState(Length.fromMeters(
-        MecanumSubsystem.robotPose.translation2d.toFTCLibT2d().getDistance(if (isRedAlliance) RED_GATE_POSITION else BLUE_GATE_POSITION)
-    ))
-}
+//fun getCurrentDynamicShooterState(isRedAlliance: Boolean): ShooterState {
+//    return interpolateDistanceToShooterState(Length.fromMeters(
+//        MecanumSubsystem.robotPose.translation2d.toFTCLibT2d().getDistance(if (isRedAlliance) RED_GATE_POSITION else BLUE_GATE_POSITION)
+//    ))
+//}

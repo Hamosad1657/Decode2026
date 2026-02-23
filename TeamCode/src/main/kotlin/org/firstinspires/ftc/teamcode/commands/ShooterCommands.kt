@@ -17,21 +17,16 @@ fun ShooterSubsystem.maintainHoodAngleCommand(angle: HaRotation2d): Command = Sh
 
 fun ShooterSubsystem.maintainHoodAngleCommand(angle: () -> HaRotation2d): Command = ShooterSubsystem.runCommand { updateHoodAngleControl(angle()) }
 
-fun ShooterSubsystem.maintainWheelSpeedCommand(speed: AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed) }
-
-fun ShooterSubsystem.maintainWheelSpeedCommand(speed: () -> AngularVelocity): Command = ShooterSubsystem.runCommand { updateShooterVelocityControl(speed()) }
-
-
 fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState: ShooterState) =
     runCommand {
         updateHoodAngleControl(shooterState.angle)
-        updateShooterVelocityControl(shooterState.speed)
+        setWheelMotorsVoltage(shooterState.speedVoltage)
     }
 
 fun ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState: () -> ShooterState) =
     runCommand {
         updateHoodAngleControl(shooterState().angle)
-        updateShooterVelocityControl(shooterState().speed)
+        setWheelMotorsVoltage(shooterState().speedVoltage)
     }
 
 // TESTING

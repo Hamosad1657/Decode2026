@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 @TeleOp
 class SimpleOpMode: CommandOpModeTeleop() {
-    val stationaryShootingState: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), AngularVelocity.fromRPM(0.0))
+    val stationaryShootingState: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
 
     val controller1 = HaCommandController({ super.gamepad1 }, 0.03, 1)
     val controller2 = HaCommandController({ super.gamepad2 }, 0.03, 1)
@@ -45,7 +45,7 @@ class SimpleOpMode: CommandOpModeTeleop() {
         IntakeSubsystem.defaultCommand = IntakeSubsystem.disableIntakeCommand()
         LoaderSubsystem.defaultCommand = LoaderSubsystem.setServoVoltageCommand(LoaderConstants.ROULETTE_SPIN_VOLTAGE)
         ShooterSubsystem.defaultCommand = ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(
-            ShooterState(HaRotation2d.fromDegrees(0.0), AngularVelocity.fromRPM(0.0)))
+            ShooterState(HaRotation2d.fromDegrees(0.0), 0.0))
     }
 
     override fun configureBindings() {

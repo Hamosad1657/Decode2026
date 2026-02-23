@@ -10,11 +10,10 @@ import com.hamosad.lib.math.Length
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleAndWheelSpeedCommand
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleCommand
-import org.firstinspires.ftc.teamcode.commands.maintainWheelSpeedCommand
 import org.firstinspires.ftc.teamcode.commands.setServoVoltageCommand
 import org.firstinspires.ftc.teamcode.commands.setWheelMotorsVoltageCommand
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterState
-import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
+//import org.firstinspires.ftc.teamcode.subsystems.shooter.interpolateDistanceToShooterState
 
 @TeleOp
 class ShooterTestOpMode: CommandOpModeTeleop() {
@@ -22,24 +21,20 @@ class ShooterTestOpMode: CommandOpModeTeleop() {
     val controller = HaCommandController({ super.gamepad1 }, 0.03, 1)
 
     override fun configureDefaultCommands() {
-        ShooterSubsystem.defaultCommand = ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPS(0.0))
+        ShooterSubsystem.defaultCommand = ShooterSubsystem.setWheelMotorsVoltageCommand(0.0)
     }
 
     override fun configureBindings() {
         controller.r2Pressed().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(
             ShooterState(HaRotation2d.fromDegrees(25.0),
-                AngularVelocity.fromRPM(250.0)
+                10.0
             )))
         controller.l2Pressed().whileTrue(ShooterSubsystem.setWheelMotorsVoltageCommand(12.0))
         controller.r1().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
-        controller.l1().whileTrue(ShooterSubsystem.maintainWheelSpeedCommand(AngularVelocity.fromRPM(100.0)))
-        controller.cross().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(interpolateDistanceToShooterState(
-            Length.fromMeters(1.0))))
         controller.circle().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(0.0)))
-        controller.dpadUp().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(10.0)))
-        controller.dpadLeft().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(25.0)))
-        controller.dpadDown().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
-        controller.dpadRight().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(70.0)))
+        controller.triangle().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(25.0)))
+        controller.square().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(50.0)))
+        controller.cross().whileTrue(ShooterSubsystem.maintainHoodAngleCommand(HaRotation2d.fromDegrees(70.0)))
     }
 
 }

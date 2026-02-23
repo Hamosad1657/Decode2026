@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
 @TeleOp
 class SuperSimpleOpMode: CommandOpModeTeleop() {
-    val stationaryShootingState: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), AngularVelocity.fromRPM(0.0))
+    val stationaryShootingState: ShooterState = ShooterState(HaRotation2d.fromDegrees(0.0), 0.0)
 
     val controller1 = HaCommandController({ super.gamepad1 }, 0.03, 1)
     val controller2 = HaCommandController({ super.gamepad2 }, 0.03, 1)
