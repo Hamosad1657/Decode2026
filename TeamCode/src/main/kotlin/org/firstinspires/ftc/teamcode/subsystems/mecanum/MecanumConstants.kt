@@ -18,7 +18,7 @@ object MecanumConstants {
 
     val CHASSIS_DIMENSIONS = HaTranslation2d(16.5, 20.75)
 
-    val WHEEL_CIRCUMFERENCE: Length = WHEEL_RADIUS * 2 * PI
+    val WHEEL_CIRCUMFERENCE: Length = Length.fromMeters(WHEEL_RADIUS.asMeters * 2 * PI)
     val MAX_CHASSIS_SPEED: MPS = MAX_WHEEL_SPEED.asRPS * WHEEL_CIRCUMFERENCE.asMeters
 
     val MAX_CHASSIS_ANGULAR_VELOCITY: AngularVelocity = AngularVelocity.fromRPS(MAX_CHASSIS_SPEED / (CHASSIS_DIMENSIONS.length * 2 * PI))

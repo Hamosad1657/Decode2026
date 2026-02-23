@@ -182,13 +182,13 @@ object MecanumSubsystem: Subsystem() {
         wheelVelocitySetpoints = newSetpoints
 
         motors[0].setVoltage(controllers[0].calculate(
-            motors[0].currentVelocity.asRPS, newSetpoints.frontLeftMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
+            motors[0].currentVelocity.asRPS, wheelVelocitySetpoints.frontLeftMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
         motors[1].setVoltage(controllers[1].calculate(
-            motors[1].currentVelocity.asRPS, newSetpoints.rearRightMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
+            motors[1].currentVelocity.asRPS, wheelVelocitySetpoints.rearRightMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
         motors[2].setVoltage(controllers[2].calculate(
-            motors[2].currentVelocity.asRPS, newSetpoints.frontRightMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
+            motors[2].currentVelocity.asRPS, wheelVelocitySetpoints.frontRightMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
         motors[3].setVoltage(controllers[3].calculate(
-            motors[3].currentVelocity.asRPS, newSetpoints.rearLeftMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
+            motors[3].currentVelocity.asRPS, wheelVelocitySetpoints.rearLeftMetersPerSecond / Constants.WHEEL_CIRCUMFERENCE.asMeters))
     }
 
     fun spinClockwise(angularVelocity: AngularVelocity) {
