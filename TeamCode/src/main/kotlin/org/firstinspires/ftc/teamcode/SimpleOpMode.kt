@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.commands.Ball
 import org.firstinspires.ftc.teamcode.commands.aimAtGoalAndMoveWithVision
 import org.firstinspires.ftc.teamcode.commands.angularVelocityDriveCommand
 import org.firstinspires.ftc.teamcode.commands.collectSimpleCommand
+import org.firstinspires.ftc.teamcode.commands.continuouslyLoadToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.disableIntakeCommand
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleAndWheelSpeedCommand
 import org.firstinspires.ftc.teamcode.commands.runIntakeCommand
@@ -75,5 +76,9 @@ class SimpleOpMode: CommandOpModeTeleop() {
 
 
         controller2.l1().toggleOnTrue(shootClosestBallCommand({ currentShootingState }, 4.0))
+
+
+        controller2.l2Pressed().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand { currentShootingState })
+        controller2.r2Pressed().whileTrue(LoaderSubsystem.continuouslyLoadToShooterCommand())
     }
 }

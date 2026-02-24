@@ -51,8 +51,13 @@ fun LoaderSubsystem.loadToShooterCommand(): Command = runCommand {
     loadToShooter()
 } finallyDo { stopLoadingToShooter() }
 
-fun LoaderSubsystem.stopLoadingToShooterCommand(): Command = runCommand {
+fun LoaderSubsystem.stopLoadingToShooterCommand(): Command = runOnce {
     stopLoadingToShooter()
+}
+
+fun LoaderSubsystem.continuouslyLoadToShooterCommand(): Command = runCommand {
+    loadToShooter()
+    setServoVoltage(1.0)
 }
 
 fun LoaderSubsystem.positionColorToShooterCommand(color: BallColor): Command =

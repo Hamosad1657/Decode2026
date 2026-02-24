@@ -6,6 +6,7 @@ import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.opModes.CommandOpModeTeleop
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.Ball
+import org.firstinspires.ftc.teamcode.commands.continuouslyLoadToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.holdRoulettePositionCommand
 import org.firstinspires.ftc.teamcode.commands.loadToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.positionBallToIntakeCommand
@@ -37,5 +38,7 @@ class LoaderTestOpMode: CommandOpModeTeleop() {
 
         controller.l2Pressed().whileTrue(LoaderSubsystem.loadToShooterCommand())
         controller.r2Pressed().whileTrue(LoaderSubsystem.stopLoadingToShooterCommand())
+
+        controller.dpadUp().whileTrue(LoaderSubsystem.continuouslyLoadToShooterCommand())
     }
 }
