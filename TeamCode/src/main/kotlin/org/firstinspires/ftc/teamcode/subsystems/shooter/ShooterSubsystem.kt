@@ -4,7 +4,6 @@ import com.hamosad.lib.commands.Subsystem
 import com.hamosad.lib.components.motors.HaCRServoMotor
 import com.hamosad.lib.components.motors.HaMotor
 import com.hamosad.lib.components.motors.MotorType
-import com.hamosad.lib.math.AngularVelocity
 import com.hamosad.lib.math.HaRotation2d
 import com.hamosad.lib.math.Volts
 import com.hamosad.lib.math.toPIDFController
@@ -15,6 +14,7 @@ object ShooterSubsystem: Subsystem() {
     private var rightMotor: HaMotor? = null
     private var leftMotor: HaMotor? = null
     private var servo: HaCRServoMotor? = null
+    private var commandedWheelVoltage = 0.0
     private val hoodAnglePIDController = ShooterConstants.HOOD_ANGLE_GAINS.toPIDFController()
 
     override fun init(newHardwareMap: HardwareMap) {
@@ -36,10 +36,10 @@ object ShooterSubsystem: Subsystem() {
     var desiredHoodAngle: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     fun updateHoodAngleControl(newAngleSetpoint: HaRotation2d = desiredHoodAngle) {
-        if (desiredHoodAngle.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
+        if (newAngleSetpoint.asDegrees in ShooterConstants.MIN_HOOD_ANGLE.asDegrees..ShooterConstants.MAX_HOOD_ANGLE.asDegrees) {
             desiredHoodAngle = newAngleSetpoint
             servo?.setVoltage(hoodAnglePIDController.calculate(
-                currentHoodAngle.asDegrees,
+                currentServoAngle.asDegrees,
                    desiredHoodAngle.asDegrees / ShooterConstants.HOOD_ANGLE_TRANSMISSION_RATIO))
         }
     }
@@ -50,6 +50,7 @@ object ShooterSubsystem: Subsystem() {
     }
 
     fun setWheelMotorsVoltage(voltage: Volts) {
+        commandedWheelVoltage = voltage
         rightMotor?.setVoltage(voltage)
         leftMotor?.setVoltage(voltage)
     }
@@ -74,5 +75,6 @@ object ShooterSubsystem: Subsystem() {
         telemetry.addData("Is current above threshold", isCurrentAboveThreshold)
 
         telemetry.addData("Is within angle tolerance", isWithinTolerance)
+        telemetry.addData("current commanded voltage", commandedWheelVoltage)
     }
 }

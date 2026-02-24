@@ -17,7 +17,7 @@ class HaCRServoMotor(name: String, hardwareMap: HardwareMap) {
         }
 
     fun setVoltage(volts: Volts) {
-        crServo.power = volts / 6
+        crServo.power = volts / 6.0
     }
 
     fun stopServo() {

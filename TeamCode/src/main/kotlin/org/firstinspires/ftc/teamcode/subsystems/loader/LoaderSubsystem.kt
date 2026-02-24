@@ -135,11 +135,11 @@ object LoaderSubsystem: Subsystem() {
     // Roulette functions
     fun updateRouletteControl(newSetpoint: HaRotation2d = angleSetpoint) {
         angleSetpoint = newSetpoint
-        var errorRad = angleSetpoint.asRadians - absoluteRouletteAngle.asRadians
+        var errorRad = angleSetpoint.asRadians - rouletteAngle.asRadians
 
         val shouldMoveCounterClockwise = (errorRad) in 0.0..PI || (errorRad) in -2*PI..-PI
 
-        errorRad = if (shouldMoveCounterClockwise) errorRad.absoluteValue else -errorRad.absoluteValue
+        //errorRad = if (shouldMoveCounterClockwise) errorRad.absoluteValue else -errorRad.absoluteValue
 
         val voltage = rouletteController.calculate(
             rouletteAngle.asRadians,

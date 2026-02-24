@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.hamosad.lib.opModes.CommandOpModeTeleop
 import com.hamosad.lib.commands.Subsystem
+import com.hamosad.lib.commands.runCommand
 import com.hamosad.lib.commands.runOnce
 import com.hamosad.lib.components.Controllers.HaCommandController
 import com.hamosad.lib.math.HaRotation2d
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.collectSimpleCommand
 import org.firstinspires.ftc.teamcode.commands.continuouslyLoadToShooterCommand
 import org.firstinspires.ftc.teamcode.commands.disableIntakeCommand
 import org.firstinspires.ftc.teamcode.commands.maintainHoodAngleAndWheelSpeedCommand
+import org.firstinspires.ftc.teamcode.commands.manualControlCommand
 import org.firstinspires.ftc.teamcode.commands.runIntakeCommand
 import org.firstinspires.ftc.teamcode.commands.runIntakeReverseCommand
 import org.firstinspires.ftc.teamcode.commands.setServoVoltageCommand
@@ -23,6 +25,7 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderConstants
 import org.firstinspires.ftc.teamcode.subsystems.loader.LoaderSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterConstants
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterState
 import org.firstinspires.ftc.teamcode.subsystems.shooter.ShooterSubsystem
 
@@ -57,28 +60,37 @@ class SimpleOpMode: CommandOpModeTeleop() {
 
         controller1.r2Pressed().whileTrue(IntakeSubsystem.runIntakeCommand())
         controller1.l2Pressed().whileTrue(IntakeSubsystem.runIntakeReverseCommand())
-
-        controller2.dpadUp().onTrue(ShooterSubsystem.runOnce { currentShootingState = ShooterState(
-            HaRotation2d.fromDegrees(0.0), 0.0) })
-
-        controller2.dpadLeft().onTrue(ShooterSubsystem.runOnce { currentShootingState = ShooterState(
-            HaRotation2d.fromDegrees(0.0), 0.0) })
-
-        controller2.dpadRight().onTrue(ShooterSubsystem.runOnce { currentShootingState = ShooterState(
-            HaRotation2d.fromDegrees(0.0), 0.0) })
-
-        controller2.dpadDown().onTrue(ShooterSubsystem.runOnce { currentShootingState = ShooterState(
-            HaRotation2d.fromDegrees(0.0), 0.0) })
-
-        controller2.square().toggleOnTrue(shootBallCommand(Ball.BALL_1, { currentShootingState }, 4.0))
-        controller2.triangle().toggleOnTrue(shootBallCommand(Ball.BALL_2, { currentShootingState }, 4.0))
-        controller2.circle().toggleOnTrue(shootBallCommand(Ball.BALL_3, { currentShootingState }, 4.0))
+        controller1.options().whileTrue(MecanumSubsystem.runCommand {MecanumSubsystem.resetGyro()})
 
 
-        controller2.l1().toggleOnTrue(shootClosestBallCommand({ currentShootingState }, 4.0))
+        // SHOOTING STATE CONTROL
+        controller2.dpadUp().onTrue(ShooterSubsystem.runOnce { currentShootingState =
+            ShooterConstants.ShooterState1 })
+
+        controller2.dpadLeft().onTrue(ShooterSubsystem.runOnce { currentShootingState =
+            ShooterConstants.ShooterState2 })
+
+        controller2.dpadRight().onTrue(ShooterSubsystem.runOnce { currentShootingState =
+            ShooterConstants.ShooterState3 })
+
+        controller2.dpadDown().onTrue(ShooterSubsystem.runOnce { currentShootingState =
+            ShooterConstants.ShooterState4 })
+
+
+        // AUTOMATIC SHOOTING COMMANDS
+        controller2.square().whileTrue(shootBallCommand(Ball.BALL_1, { currentShootingState }))
+        controller2.triangle().whileTrue(shootBallCommand(Ball.BALL_2, { currentShootingState }))
+        controller2.circle().whileTrue(shootBallCommand(Ball.BALL_3, { currentShootingState }))
+
+
+        controller2.l1().whileTrue(shootClosestBallCommand({ currentShootingState }))
 
 
         controller2.l2Pressed().whileTrue(ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand { currentShootingState })
         controller2.r2Pressed().whileTrue(LoaderSubsystem.continuouslyLoadToShooterCommand())
+
+        // EMERGENCY
+        controller2.psButton().toggleOnTrue(LoaderSubsystem.manualControlCommand(
+            { controller2.getLeftX() }, { controller2.controller()?.right_bumper ?: false }))
     }
 }
