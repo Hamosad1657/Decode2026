@@ -41,28 +41,28 @@ fun collectAdvancedCommand(slotTimeout: Seconds): Command =
 
 fun shootBallCommand(ball: Ball, shooterState: ShooterState): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState) raceWith (
-            (LoaderSubsystem.positionBallToShooterCommand(ball) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+            (LoaderSubsystem.positionBallToShooterCommand(ball) withTimeout(2.5)) andThen
                     (LoaderSubsystem.loadToShooterCommand())
             )
     )
 
 fun shootBallCommand(ball: Ball, shooterState: () -> ShooterState): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState) raceWith (
-            (LoaderSubsystem.positionBallToShooterCommand(ball) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+            (LoaderSubsystem.positionBallToShooterCommand(ball) withTimeout(2.5)) andThen
                     (LoaderSubsystem.loadToShooterCommand())
             )
     )
 
 fun shootClosestBallCommand(shooterState: ShooterState): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState) raceWith (
-            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) withTimeout(2.5)) andThen
                     (LoaderSubsystem.loadToShooterCommand())
             )
             )
 
 fun shootClosestBallCommand(shooterState: () -> ShooterState): Command =
     (ShooterSubsystem.maintainHoodAngleAndWheelSpeedCommand(shooterState) raceWith (
-            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) until { LoaderSubsystem.isAtSetpoint && ShooterSubsystem.isWithinTolerance }) andThen
+            (LoaderSubsystem.positionBallToShooterCommand(LoaderSubsystem.closestBallToShooter) withTimeout(2.5)) andThen
                     (LoaderSubsystem.loadToShooterCommand())
             )
             )

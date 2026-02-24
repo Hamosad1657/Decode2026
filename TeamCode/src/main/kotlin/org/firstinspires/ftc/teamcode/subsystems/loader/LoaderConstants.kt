@@ -30,7 +30,7 @@ object LoaderConstants {
         0.07,
     )
 
-    const val ROULETTE_SPIN_VOLTAGE: Volts = 6.0
+    const val ROULETTE_SPIN_VOLTAGE: Volts = 0.999
 
     // ROULETTE VALUES (Counter clockwise increasing)
     val BALL_1_AT_SHOOTER = HaRotation2d.fromDegrees(0.0)

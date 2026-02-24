@@ -13,7 +13,7 @@ data class ShooterState(public val angle: HaRotation2d, public val speedVoltage:
 
 object ShooterConstants {
     val HOOD_ANGLE_GAINS = PIDGains(
-        0.0131,
+        0.0191,
         0.0,
         0.0
     )
@@ -29,7 +29,7 @@ object ShooterConstants {
     val RIGHT_MOTOR_DIRECTION: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD
     val SERVO_DIRECTION = DcMotorSimple.Direction.FORWARD
 
-    val MAX_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(54.0)
+    val MAX_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(45.0)
     val MIN_HOOD_ANGLE: HaRotation2d = HaRotation2d.fromDegrees(0.0)
 
     const val CURRENT_THRESHOLD: Amps = 0.0
